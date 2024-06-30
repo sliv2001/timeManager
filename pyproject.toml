@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "timemanager"
+version = "0.0.0"
+description = "This is simple Time Manager for fine-granular time tracking in 15-min granules."
+authors = ["Ivan Sladkov <ivan.sladkov@yandex.ru>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.13"
+pyside6 = "^6.7.2"
+pony = "^0.7.17"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
