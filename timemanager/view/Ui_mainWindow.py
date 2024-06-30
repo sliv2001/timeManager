@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'mainWindow.ui'
+## Form generated from reading UI file 'mainWindowMkFSGm.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -30,7 +30,7 @@ class Ui_MainWindow(object):
         self.gridLayout.setObjectName(u"gridLayout")
         self.buttonBox = QDialogButtonBox(self.centralwidget)
         self.buttonBox.setObjectName(u"buttonBox")
-        self.buttonBox.setStandardButtons(QDialogButtonBox.StandardButton.Close)
+        self.buttonBox.setStandardButtons(QDialogButtonBox.StandardButton.NoButton)
 
         self.gridLayout.addWidget(self.buttonBox, 2, 0, 1, 1)
 
@@ -47,7 +47,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 800, 36))
+        self.menubar.setGeometry(QRect(0, 0, 800, 33))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
