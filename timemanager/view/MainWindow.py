@@ -1,5 +1,5 @@
 from PySide6.QtCore import Qt, Slot
-from PySide6.QtWidgets import QMainWindow, QWidget, QAbstractButton, QPushButton, QDialogButtonBox
+from PySide6.QtWidgets import QMainWindow, QWidget, QAbstractButton, QPushButton, QDialogButtonBox, QInputDialog
 
 from timemanager.view.Ui_mainWindow import Ui_MainWindow
 from timemanager.presenter.presenter import Presenter
@@ -14,10 +14,14 @@ class MainWindow(QMainWindow):
     self.ui = Ui_MainWindow()
     self.ui.setupUi(self)
     self.presenter = Presenter(self)
-    close = QPushButton(text="Закрыть", parent=self.ui.buttonBox)
-    close.setObjectName("closeButton")
-    close.clicked.connect(slot=self.closeButton_clicked)
-    self.ui.buttonBox.addButton(close, QDialogButtonBox.ButtonRole.DestructiveRole)
+    closeButton = QPushButton(text="Закрыть", parent=self.ui.buttonBox)
+    closeButton.setObjectName("closeButton")
+    closeButton.clicked.connect(slot=self.closeButton_clicked)
+    self.ui.buttonBox.addButton(closeButton, QDialogButtonBox.ButtonRole.DestructiveRole)
+    newItemButton = QPushButton(text="Создать", parent=self.ui.buttonBox)
+    newItemButton.setObjectName("newItemButton")
+    newItemButton.clicked.connect(slot=self.newItemButton_clicked)
+    self.ui.buttonBox.addButton(newItemButton, QDialogButtonBox.ButtonRole.ActionRole)
     self.update()
 
   def drawCheckbox(self, item):
@@ -31,9 +35,18 @@ class MainWindow(QMainWindow):
       self.drawCheckbox(item)
 
   @Slot()
-  def closeButton_clicked(button: QAbstractButton):
+  def closeButton_clicked(self, button: QAbstractButton):
     exit()
+
+  @Slot()
+  def newItemButton_clicked(self, button: QAbstractButton):
+    self._createNewItem()
 
   def update(self):
     self.data = self.presenter.getData()
     self.drawCheckboxes()
+
+  def _createNewItem(self):
+    newItem, res = QInputDialog.getText(self, 'Новый пункт', 'Название нового пункта: ')
+    if res and len(newItem) > 0:
+      self.presenter.AddItem(newItem)
