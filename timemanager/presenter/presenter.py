@@ -1,6 +1,7 @@
 from datetime import datetime, date
 from pony import orm
 from timemanager.model.model import Fulfill, Items
+from .ViewData import ViewData
 
 class Presenter:
   def __init__(self, view) -> None:
@@ -31,9 +32,12 @@ class Presenter:
   @orm.db_session
   def getData(self):
     today_night = datetime.combine(date.today(), datetime.min.time())
-    existingData = orm.select(ff for ff in Fulfill if ff.dateTime >= today_night and ff.dateTime == max(ff.dateTime for ff in Fulfill if ff.dateTime >= today_night))
-    allData = orm.left_join((item, ff) for item in Items for ff in existingData)
-    return allData[:]
+    allData = orm.left_join((item, ff) for item in Items for ff in item.fulfil)
+    allData.show()
+    allDataLocal = []
+    for item in allData[:]:
+      allDataLocal.append(ViewData(item[0].name, item[0].pk, item[1].status, item[1].dateTime, item[1].elapsedTime))
+    return allDataLocal
 
   def RemoveItem(self, item):
     self._removeItem(item)
