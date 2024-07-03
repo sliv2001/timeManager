@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from PySide6.QtCore import Qt, Slot
 from PySide6.QtWidgets import QMainWindow, QWidget, QAbstractButton, QPushButton, QDialogButtonBox, QInputDialog
 
@@ -22,6 +24,7 @@ class MainWindow(QMainWindow):
     newItemButton.setObjectName("newItemButton")
     newItemButton.clicked.connect(slot=self.newItemButton_clicked)
     self.ui.buttonBox.addButton(newItemButton, QDialogButtonBox.ButtonRole.ActionRole)
+    self.ui.listWidget.itemChanged.connect(slot=self.item_checked)
     self.update()
 
   def drawCheckbox(self, item):
@@ -32,6 +35,7 @@ class MainWindow(QMainWindow):
     self.ui.listWidget.addItem(line)
 
   def drawCheckboxes(self):
+    self.ui.listWidget.clear()
     for item in self.data:
       self.drawCheckbox(item)
 
@@ -42,6 +46,11 @@ class MainWindow(QMainWindow):
   @Slot()
   def newItemButton_clicked(self, button: QAbstractButton):
     self._createNewItem()
+
+  @Slot()
+  def item_checked(self, item: ListItem):
+    if item.checkState():
+      self.presenter.SetStatus(itemPK=item.itemPK, status='DONE', elapsedTime=15*60, dateTime=datetime.now())
 
   def update(self):
     self.data = self.presenter.getData()

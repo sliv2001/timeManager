@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QListWidgetItem
 
 class ListItem(QListWidgetItem):
-  index: int
-  def __init__(self, item, index) -> None:
-    self.index = index
+  itemPK: int
+  def __init__(self, item, itemPK) -> None:
+    self.itemPK = itemPK
     return super().__init__(item)

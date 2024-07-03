@@ -36,13 +36,16 @@ class Presenter:
     allData.show()
     allDataLocal = []
     for item in allData[:]:
-      allDataLocal.append(ViewData(item[0].name, item[0].pk, item[1].status, item[1].dateTime, item[1].elapsedTime))
+      if item[1] is None:
+        allDataLocal.append(ViewData(item[0].name, item[0].pk, 'PENDING', today_night, 0))
+      else:
+        allDataLocal.append(ViewData(item[0].name, item[0].pk, item[1].status, item[1].dateTime, item[1].elapsedTime))
     return allDataLocal
 
   def RemoveItem(self, item):
     self._removeItem(item)
     self._updateView()
 
-  def SetStatus(self, item, status, elapsedTime = 15*60, dateTime = datetime.now()):
-    self._addFulfill(item, status, elapsedTime, dateTime)
+  def SetStatus(self, itemPK, status, elapsedTime = 15*60, dateTime = datetime.now()):
+    self._addFulfill(itemPK, status, elapsedTime, dateTime)
     self._updateView()
