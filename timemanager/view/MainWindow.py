@@ -45,7 +45,7 @@ class MainWindow(QMainWindow):
 
   @Slot()
   def newItemButton_clicked(self, button: QAbstractButton):
-    self._createNewItem()
+    self.createNewItem()
 
   @Slot()
   def item_checked(self, item: ListItem):
@@ -56,7 +56,7 @@ class MainWindow(QMainWindow):
     self.data = self.presenter.getData()
     self.drawCheckboxes()
 
-  def _createNewItem(self):
+  def createNewItem(self):
     newItem, res = QInputDialog.getText(self, 'Новый пункт', 'Название нового пункта: ')
     if res and len(newItem) > 0:
       self.presenter.AddItem(newItem)
