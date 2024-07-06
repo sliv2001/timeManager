@@ -32,8 +32,10 @@ class Presenter:
   @orm.db_session
   def getData(self):
     today_night = datetime.combine(date.today(), datetime.min.time())
-    allData = orm.left_join((item, ff) for item in Items for ff in item.fulfil)
+    allData = orm.left_join((item, ff) for item in Items for ff in item.fulfil if (ff.dateTime == max(ff.dateTime for ff in item.fulfil if ff.dateTime >= today_night)) or ff is None)
+    # allData = allData.filter(lambda item, ff: ff.dateTime >= today_night or ff is None)
     allData.show()
+    print(allData.get_sql())
     allDataLocal = []
     for item in allData[:]:
       if item[1] is None:
