@@ -28,10 +28,9 @@ class MainWindow(QMainWindow):
     self.update()
 
   def drawCheckbox(self, item):
-    print(item)
     line = ListItem(item.itemName, item.itemPK)
     line.setFlags(line.flags() | Qt.ItemFlag.ItemIsUserCheckable)
-    line.setCheckState(Qt.CheckState.Unchecked)
+    line.setCheckState(Qt.CheckState.Checked if item.done() else Qt.CheckState.Unchecked)
     self.ui.listWidget.addItem(line)
 
   def drawCheckboxes(self):
