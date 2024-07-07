@@ -32,11 +32,13 @@ class Presenter:
   @orm.db_session
   def getData(self):
     today_night = datetime.combine(date.today(), datetime.min.time())
-    allData = orm.left_join((item, ff) for item in Items for ff in item.fulfil if (ff.dateTime == max(ff.dateTime for ff in item.fulfil if ff.dateTime >= today_night)) or ff is None)
+    allData = orm.left_join((item, ff) for item in Items for ff in item.fulfil if (ff.dateTime == max(ff.dateTime for ff in item.fulfil)) or ff is None).order_by(1)
     allDataLocal = []
     for item in allData[:]:
       if item[1] is None:
-        allDataLocal.append(ViewData(item[0].name, item[0].pk, 'PENDING', today_night, 0))
+        allDataLocal.append(ViewData(item[0].name, item[0].pk, ViewData.Pending, today_night, 0))
+      elif item[1].dateTime < today_night:
+        allDataLocal.append(ViewData(item[0].name, item[0].pk, ViewData.Pending, today_night, 0))
       else:
         allDataLocal.append(ViewData(item[0].name, item[0].pk, item[1].status, item[1].dateTime, item[1].elapsedTime))
     return allDataLocal
