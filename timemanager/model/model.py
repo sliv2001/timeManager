@@ -8,6 +8,7 @@ class Items(db.Entity):
   pk = orm.PrimaryKey(int, auto=True)
   name = orm.Required(str)
   fulfil = orm.Set('Fulfill')
+  timeout = orm.Optional(int, default = 24*3600)
 
 class Fulfill(db.Entity):
   pk = orm.PrimaryKey(int, auto=True)

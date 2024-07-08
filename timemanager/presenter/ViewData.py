@@ -5,9 +5,10 @@ class ViewData():
   Done: final = "DONE"
   Pending: final = "PENDING"
 
-  def __init__(self, itemName, itemPK, status, dateTime, elapsedTime) -> None:
+  def __init__(self, itemName, itemPK, status, dateTime, elapsedTime, timeout = 24*3600) -> None:
     self.itemName = itemName
     self.itemPK = itemPK
+    self.timeout = timeout
     self.status = status
     self.dateTime = dateTime
     self.elapsedTime = elapsedTime
