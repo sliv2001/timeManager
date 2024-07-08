@@ -1,7 +1,8 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from PySide6.QtCore import Qt, Slot
 from PySide6.QtWidgets import QMainWindow, QWidget, QAbstractButton, QPushButton, QDialogButtonBox, QInputDialog
+from PySide6.QtGui import QColor
 
 from timemanager.view.Ui_mainWindow import Ui_MainWindow
 from timemanager.presenter.presenter import Presenter
@@ -31,11 +32,13 @@ class MainWindow(QMainWindow):
     line = ListItem(item.itemName, item.itemPK)
     line.setFlags(line.flags() | Qt.ItemFlag.ItemIsUserCheckable)
     line.setCheckState(Qt.CheckState.Checked if item.done() else Qt.CheckState.Unchecked)
+    if item.dateTime.date() < (datetime.now()-timedelta(seconds=item.timeout)).date():
+      line.setBackground(QColor("Red"))
     self.ui.listWidget.addItem(line)
 
   def drawCheckboxes(self):
     self.ui.listWidget.clear()
-    for item in self.data:
+    for item in self.todayData:
       self.drawCheckbox(item)
 
   @Slot()
@@ -52,7 +55,7 @@ class MainWindow(QMainWindow):
       self.presenter.SetStatus(itemPK=item.itemPK, status='DONE', elapsedTime=15*60, dateTime=datetime.now())
 
   def update(self):
-    self.data = self.presenter.getData()
+    self.todayData = self.presenter.getDataSinceToday()
     self.drawCheckboxes()
 
   def createNewItem(self):
