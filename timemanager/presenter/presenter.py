@@ -61,7 +61,7 @@ class Presenter:
       elif item[1].dateTime < dateTime:
         allDataLocal.append(ViewData(item[0].name, item[0].pk, PresenterStatuses.Pending, item[1].dateTime, 0, item[0].timeout))
       else:
-        allDataLocal.append(ViewData(item[0].name, item[0].pk, item[1].status, item[1].dateTime, item[1].elapsedTime, item[0].timeout))
+        allDataLocal.append(ViewData(item[0].name, item[0].pk, item[1].status.name, item[1].dateTime, item[1].elapsedTime, item[0].timeout))
     return allDataLocal
 
   @orm.db_session
