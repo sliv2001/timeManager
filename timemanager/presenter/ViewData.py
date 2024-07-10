@@ -1,9 +1,6 @@
-from typing import final
+from .Statuses import Statuses
 
 class ViewData():
-
-  Done: final = "DONE"
-  Pending: final = "PENDING"
 
   def __init__(self, itemName, itemPK, status, dateTime, elapsedTime, timeout = 24*3600) -> None:
     self.itemName = itemName
@@ -14,4 +11,4 @@ class ViewData():
     self.elapsedTime = elapsedTime
 
   def done(self):
-    return self.status == self.Done
+    return self.status == Statuses.Done

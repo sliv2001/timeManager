@@ -52,7 +52,7 @@ class MainWindow(QMainWindow):
   @Slot()
   def item_checked(self, item: ListItem):
     if item.checkState():
-      self.presenter.SetStatus(itemPK=item.itemPK, status='DONE', elapsedTime=15*60, dateTime=datetime.now())
+      self.presenter.SetStatus(itemPK=item.itemPK, statusLine='DONE', elapsedTime=15*60, dateTime=datetime.now())
 
   def update(self):
     self.todayData = self.presenter.getDataSinceToday()
