@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
 from PySide6.QtCore import Qt, Slot
-from PySide6.QtWidgets import QMainWindow, QWidget, QAbstractButton, QPushButton, QDialogButtonBox, QInputDialog
+from PySide6.QtWidgets import QMainWindow, QWidget, QAbstractButton, QPushButton, QDialogButtonBox, QInputDialog, QMenu
 from PySide6.QtGui import QColor
 
 from timemanager.view.Ui_mainWindow import Ui_MainWindow
@@ -26,6 +26,12 @@ class MainWindow(QMainWindow):
     newItemButton.clicked.connect(slot=self.newItemButton_clicked)
     self.ui.buttonBox.addButton(newItemButton, QDialogButtonBox.ButtonRole.ActionRole)
     self.ui.listWidget.itemChanged.connect(slot=self.item_checked)
+
+    self.ui.listWidget.
+    self.ui.menu = QMenu(self.ui.listWidget)
+    self.ui.menu.addAction("Удалить", self, "deleteTriggered")
+
+
     self.update()
 
   def drawCheckbox(self, item):
@@ -53,6 +59,10 @@ class MainWindow(QMainWindow):
   def item_checked(self, item: ListItem):
     if item.checkState():
       self.presenter.SetStatus(itemPK=item.itemPK, statusLine='DONE', elapsedTime=15*60, dateTime=datetime.now())
+
+  @Slot()
+  def deleteTriggered(self):
+    exit()
 
   def update(self):
     self.todayData = self.presenter.getDataSinceToday()
