@@ -59,7 +59,7 @@ class MainWindow(QMainWindow):
 
   @Slot()
   def deleteTriggered(self):
-    exit()
+    self.presenter.RemoveItem(self.ui.listWidget.currentItem().itemPK)
 
   def update(self):
     self.todayData = self.presenter.getDataSinceToday()

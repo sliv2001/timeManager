@@ -15,7 +15,7 @@ class Presenter:
   def initStatuses(self):
     try:
       with orm.db_session:
-        for statusLine in ['ACTIVE', 'DONE', 'OUTDATED', 'PENDING', 'REJECTED']:
+        for statusLine in PresenterStatuses.AllStatuses():
           status = Statuses(name=statusLine)
     except orm.TransactionIntegrityError as e:
       pass
@@ -34,7 +34,8 @@ class Presenter:
 
   @orm.db_session
   def _removeItem(self, itemPK):
-    Items[itemPK].delete()
+    statusEntry = Statuses.get(name=PresenterStatuses.Removed)
+    Items[itemPK].status = statusEntry
 
   def _updateView(self):
     self.view.update()
