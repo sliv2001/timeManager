@@ -26,8 +26,10 @@ class MainWindow(QMainWindow):
     newItemButton.clicked.connect(slot=self.newItemButton_clicked)
     self.ui.buttonBox.addButton(newItemButton, QDialogButtonBox.ButtonRole.ActionRole)
     self.ui.listWidget.itemChanged.connect(slot=self.item_checked)
-    self.ui.removeItem.triggered.connect(slot=self.deleteTriggered)
-    self.ui.listWidget.addAction(self.ui.removeItem)
+
+    self.ui.menu = QMenu(self.ui.listWidget)
+    self.ui.menu.addAction("Удалить", self, "deleteTriggered")
+
 
     self.update()
 
