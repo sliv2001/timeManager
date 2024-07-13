@@ -33,8 +33,8 @@ class Presenter:
     return itemEntry.pk
 
   @orm.db_session
-  def _removeItem(self, item):
-    Items[item].delete()
+  def _removeItem(self, itemPK):
+    Items[itemPK].delete()
 
   def _updateView(self):
     self.view.update()
@@ -69,8 +69,8 @@ class Presenter:
     today_night = datetime.combine(date.today(), datetime.min.time())
     return self.getDataSince(today_night)
 
-  def RemoveItem(self, item):
-    self._removeItem(item)
+  def RemoveItem(self, itemPK):
+    self._removeItem(itemPK)
     self._updateView()
 
   def SetStatus(self, itemPK, statusLine, elapsedTime = 15*60, dateTime = datetime.now()):
