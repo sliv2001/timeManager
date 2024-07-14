@@ -64,6 +64,10 @@ class MainWindow(QMainWindow):
   def update(self):
     self.todayData = self.presenter.getDataSinceToday()
     self.drawCheckboxes()
+    self.setRemovalEnabled()
+
+  def setRemovalEnabled(self):
+      self.ui.removeItem.setEnabled(self.ui.listWidget.count() > 0)
 
   def createNewItem(self):
     newItem, res = QInputDialog.getText(self, 'Новый пункт', 'Название нового пункта: ')
