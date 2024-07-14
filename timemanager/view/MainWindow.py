@@ -20,14 +20,17 @@ class MainWindow(QMainWindow):
     closeButton = QPushButton(text="Закрыть", parent=self.ui.buttonBox)
     closeButton.setObjectName("closeButton")
     closeButton.clicked.connect(slot=self.closeButton_clicked)
-    self.ui.buttonBox.addButton(closeButton, QDialogButtonBox.ButtonRole.DestructiveRole)
     newItemButton = QPushButton(text="Создать", parent=self.ui.buttonBox)
-    newItemButton.setObjectName("newItemButton")
-    newItemButton.clicked.connect(slot=self.newItemButton_clicked)
+    newItemButton.clicked.connect(slot=self.ui.addItem.trigger)
+    self.ui.buttonBox.addButton(closeButton, QDialogButtonBox.ButtonRole.DestructiveRole)
     self.ui.buttonBox.addButton(newItemButton, QDialogButtonBox.ButtonRole.ActionRole)
-    self.ui.listWidget.itemChanged.connect(slot=self.item_checked)
     self.ui.removeItem.triggered.connect(slot=self.deleteTriggered)
+    self.ui.addItem.triggered.connect(slot=self.addTriggered)
+    self.ui.listWidget.itemChanged.connect(slot=self.item_checked)
     self.ui.listWidget.addAction(self.ui.removeItem)
+    self.ui.listWidget.addAction(self.ui.addItem)
+    self.ui.listWidget.itemSelectionChanged.connect(self.changeItemSelection)
+    newItemButton.setObjectName("newItemButton")
 
     self.update()
 
@@ -49,7 +52,7 @@ class MainWindow(QMainWindow):
     exit()
 
   @Slot()
-  def newItemButton_clicked(self, button: QAbstractButton):
+  def addTriggered(self, button: QAbstractButton):
     self.createNewItem()
 
   @Slot()
@@ -59,7 +62,11 @@ class MainWindow(QMainWindow):
 
   @Slot()
   def deleteTriggered(self):
-    self.presenter.RemoveItem(self.ui.listWidget.currentItem().itemPK)
+    self.presenter.RemoveItems([item.itemPK for item in self.ui.listWidget.selectedItems()])
+
+  @Slot()
+  def changeItemSelection(self):
+    self.setRemovalEnabled()
 
   def update(self):
     self.todayData = self.presenter.getDataSinceToday()
@@ -67,7 +74,7 @@ class MainWindow(QMainWindow):
     self.setRemovalEnabled()
 
   def setRemovalEnabled(self):
-      self.ui.removeItem.setEnabled(self.ui.listWidget.count() > 0)
+      self.ui.removeItem.setEnabled(len(self.ui.listWidget.selectedItems()) > 0)
 
   def createNewItem(self):
     newItem, res = QInputDialog.getText(self, 'Новый пункт', 'Название нового пункта: ')

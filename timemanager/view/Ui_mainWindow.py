@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'mainWindowFogIAh.ui'
+## Form generated from reading UI file 'mainWindowhjcbWE.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -16,9 +16,10 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QIcon, QImage, QKeySequence, QLinearGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
-from PySide6.QtWidgets import (QAbstractButton, QApplication, QDialogButtonBox, QGridLayout,
-    QLabel, QListWidget, QListWidgetItem, QMainWindow,
-    QMenuBar, QSizePolicy, QStatusBar, QWidget)
+from PySide6.QtWidgets import (QAbstractButton, QAbstractItemView, QApplication, QDialogButtonBox,
+    QGridLayout, QLabel, QListWidget, QListWidgetItem,
+    QMainWindow, QMenuBar, QSizePolicy, QStatusBar,
+    QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -27,10 +28,16 @@ class Ui_MainWindow(object):
         MainWindow.resize(800, 600)
         self.removeItem = QAction(MainWindow)
         self.removeItem.setObjectName(u"removeItem")
-        self.removeItem.setCheckable(True)
+        self.removeItem.setCheckable(False)
         icon = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.EditDelete))
         self.removeItem.setIcon(icon)
         self.removeItem.setMenuRole(QAction.MenuRole.NoRole)
+        self.addItem = QAction(MainWindow)
+        self.addItem.setObjectName(u"addItem")
+        self.addItem.setCheckable(False)
+        icon1 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.DocumentNew))
+        self.addItem.setIcon(icon1)
+        self.addItem.setMenuRole(QAction.MenuRole.NoRole)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
@@ -49,6 +56,7 @@ class Ui_MainWindow(object):
         self.listWidget = QListWidget(self.centralwidget)
         self.listWidget.setObjectName(u"listWidget")
         self.listWidget.setContextMenuPolicy(Qt.ContextMenuPolicy.ActionsContextMenu)
+        self.listWidget.setSelectionMode(QAbstractItemView.SelectionMode.MultiSelection)
 
         self.gridLayout.addWidget(self.listWidget, 1, 0, 1, 1)
 
@@ -74,6 +82,13 @@ class Ui_MainWindow(object):
 #endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(shortcut)
         self.removeItem.setShortcut(QCoreApplication.translate("MainWindow", u"Del", None))
+#endif // QT_CONFIG(shortcut)
+        self.addItem.setText(QCoreApplication.translate("MainWindow", u"\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c", None))
+#if QT_CONFIG(tooltip)
+        self.addItem.setToolTip(QCoreApplication.translate("MainWindow", u"\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u043d\u043e\u0432\u044b\u0439 \u044d\u043b\u0435\u043c\u0435\u043d\u0442", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(shortcut)
+        self.addItem.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+N", None))
 #endif // QT_CONFIG(shortcut)
         self.label.setText(QCoreApplication.translate("MainWindow", u"This is a list of actions you are supposed to fulfill within a day", None))
     # retranslateUi
