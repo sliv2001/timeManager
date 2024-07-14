@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'mainWindowSrxjwZ.ui'
+## Form generated from reading UI file 'mainWindowwheeZV.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -19,7 +19,8 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
 from PySide6.QtWidgets import (QAbstractButton, QAbstractItemView, QApplication, QDialogButtonBox,
     QGridLayout, QGroupBox, QLabel, QListWidget,
     QListWidgetItem, QMainWindow, QMenuBar, QSizePolicy,
-    QStatusBar, QTextEdit, QVBoxLayout, QWidget)
+    QStatusBar, QTabWidget, QTextEdit, QVBoxLayout,
+    QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -59,12 +60,31 @@ class Ui_MainWindow(object):
         self.itemVerbose.setObjectName(u"itemVerbose")
         self.verticalLayout = QVBoxLayout(self.itemVerbose)
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.itemVerboseTextEdit = QTextEdit(self.itemVerbose)
+        self.tabWidget = QTabWidget(self.itemVerbose)
+        self.tabWidget.setObjectName(u"tabWidget")
+        self.markdown = QWidget()
+        self.markdown.setObjectName(u"markdown")
+        self.verticalLayout_2 = QVBoxLayout(self.markdown)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.itemVerboseTextEdit = QTextEdit(self.markdown)
         self.itemVerboseTextEdit.setObjectName(u"itemVerboseTextEdit")
-        self.itemVerboseTextEdit.setAutoFormatting(QTextEdit.AutoFormattingFlag.AutoNone)
-        self.itemVerboseTextEdit.setTextInteractionFlags(Qt.TextInteractionFlag.LinksAccessibleByKeyboard|Qt.TextInteractionFlag.LinksAccessibleByMouse|Qt.TextInteractionFlag.TextBrowserInteraction|Qt.TextInteractionFlag.TextEditable|Qt.TextInteractionFlag.TextEditorInteraction|Qt.TextInteractionFlag.TextSelectableByKeyboard|Qt.TextInteractionFlag.TextSelectableByMouse)
 
-        self.verticalLayout.addWidget(self.itemVerboseTextEdit)
+        self.verticalLayout_2.addWidget(self.itemVerboseTextEdit)
+
+        self.tabWidget.addTab(self.markdown, "")
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.markdown), u"Markdown")
+        self.text = QWidget()
+        self.text.setObjectName(u"text")
+        self.verticalLayout_3 = QVBoxLayout(self.text)
+        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+        self.itemVerboseTextView = QTextEdit(self.text)
+        self.itemVerboseTextView.setObjectName(u"itemVerboseTextView")
+
+        self.verticalLayout_3.addWidget(self.itemVerboseTextView)
+
+        self.tabWidget.addTab(self.text, "")
+
+        self.verticalLayout.addWidget(self.tabWidget)
 
 
         self.gridLayout.addWidget(self.itemVerbose, 2, 0, 1, 1)
@@ -85,6 +105,9 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
+
+        self.tabWidget.setCurrentIndex(0)
+
 
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
@@ -107,5 +130,6 @@ class Ui_MainWindow(object):
 #endif // QT_CONFIG(shortcut)
         self.label.setText(QCoreApplication.translate("MainWindow", u"\u042d\u0442\u043e \u0441\u043f\u0438\u0441\u043e\u043a \u0434\u0435\u043b, \u043a\u043e\u0442\u043e\u0440\u044b\u0435 \u043d\u0443\u0436\u043d\u043e \u0432\u044b\u043f\u043e\u043b\u043d\u0438\u0442\u044c \u0432 \u0442\u0435\u0447\u0435\u043d\u0438\u0435 \u0434\u043d\u044f:", None))
         self.itemVerbose.setTitle(QCoreApplication.translate("MainWindow", u"GroupBox", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.text), QCoreApplication.translate("MainWindow", u"\u0424\u043e\u0440\u043c\u0430\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u044b\u0439 \u0442\u0435\u043a\u0441\u0442", None))
     # retranslateUi
 

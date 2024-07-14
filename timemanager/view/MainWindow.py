@@ -32,6 +32,8 @@ class MainWindow(QMainWindow):
     self.ui.listWidget.itemSelectionChanged.connect(self.changeItemSelection)
     newItemButton.setObjectName("newItemButton")
 
+    self.ui.tabWidget.currentChanged.connect(self.textViewChanged)
+
     self.update()
 
   def drawCheckbox(self, item):
@@ -69,13 +71,25 @@ class MainWindow(QMainWindow):
     self.updateItemVerbose()
     self.setRemovalEnabled()
 
+  @Slot()
+  def textViewChanged(self, index):
+    # If index is 0, we switched to MD from text, as MD is 0-th widget
+    self.updateTextFormatting(index == 0)
+
   def updateItemVerbose(self):
     currentItems = self.ui.listWidget.selectedItems()
     if len(currentItems) == 1:
       self.setAndShowItemVerbose(currentItems)
-      self.ui.textEdit
     else:
       self.hideItemVerbose()
+
+
+  def updateTextFormatting(self, toMD):
+    if toMD:
+      self.ui.itemVerboseTextEdit.setPlainText(self.ui.itemVerboseTextView.toMarkdown())
+    else:
+      self.ui.itemVerboseTextView.setMarkdown(self.ui.itemVerboseTextEdit.toPlainText())
+
 
   def hideItemVerbose(self):
       self.ui.itemVerbose.hide()

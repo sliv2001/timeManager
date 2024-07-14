@@ -42,13 +42,30 @@
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QTextEdit" name="itemVerboseTextEdit">
-         <property name="autoFormatting">
-          <set>QTextEdit::AutoFormattingFlag::AutoNone</set>
+        <widget class="QTabWidget" name="tabWidget">
+         <property name="currentIndex">
+          <number>0</number>
          </property>
-         <property name="textInteractionFlags">
-          <set>Qt::TextInteractionFlag::LinksAccessibleByKeyboard|Qt::TextInteractionFlag::LinksAccessibleByMouse|Qt::TextInteractionFlag::TextBrowserInteraction|Qt::TextInteractionFlag::TextEditable|Qt::TextInteractionFlag::TextEditorInteraction|Qt::TextInteractionFlag::TextSelectableByKeyboard|Qt::TextInteractionFlag::TextSelectableByMouse</set>
-         </property>
+         <widget class="QWidget" name="markdown">
+          <attribute name="title">
+           <string notr="true">Markdown</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_2">
+           <item>
+            <widget class="QTextEdit" name="itemVerboseTextEdit"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="text">
+          <attribute name="title">
+           <string>Форматированный текст</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <item>
+            <widget class="QTextEdit" name="itemVerboseTextView"/>
+           </item>
+          </layout>
+         </widget>
         </widget>
        </item>
       </layout>
