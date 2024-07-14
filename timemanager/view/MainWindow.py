@@ -66,12 +66,28 @@ class MainWindow(QMainWindow):
 
   @Slot()
   def changeItemSelection(self):
+    self.updateItemVerbose()
     self.setRemovalEnabled()
+
+  def updateItemVerbose(self):
+    currentItems = self.ui.listWidget.selectedItems()
+    if len(currentItems) == 1:
+      self.setAndShowItemVerbose(currentItems)
+      self.ui.textEdit
+    else:
+      self.hideItemVerbose()
+
+  def hideItemVerbose(self):
+      self.ui.itemVerbose.hide()
+
+  def setAndShowItemVerbose(self, currentItems):
+      self.ui.itemVerbose.setTitle(currentItems[0].text())
+      self.ui.itemVerbose.show()
 
   def update(self):
     self.todayData = self.presenter.getDataSinceToday()
     self.drawCheckboxes()
-    self.setRemovalEnabled()
+    self.changeItemSelection()
 
   def setRemovalEnabled(self):
       self.ui.removeItem.setEnabled(len(self.ui.listWidget.selectedItems()) > 0)

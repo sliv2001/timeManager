@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'mainWindowhjcbWE.ui'
+## Form generated from reading UI file 'mainWindowSrxjwZ.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -17,15 +17,16 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
 from PySide6.QtWidgets import (QAbstractButton, QAbstractItemView, QApplication, QDialogButtonBox,
-    QGridLayout, QLabel, QListWidget, QListWidgetItem,
-    QMainWindow, QMenuBar, QSizePolicy, QStatusBar,
-    QWidget)
+    QGridLayout, QGroupBox, QLabel, QListWidget,
+    QListWidgetItem, QMainWindow, QMenuBar, QSizePolicy,
+    QStatusBar, QTextEdit, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.resize(800, 600)
+        MainWindow.setUnifiedTitleAndToolBarOnMac(True)
         self.removeItem = QAction(MainWindow)
         self.removeItem.setObjectName(u"removeItem")
         self.removeItem.setCheckable(False)
@@ -42,23 +43,37 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName(u"gridLayout")
-        self.buttonBox = QDialogButtonBox(self.centralwidget)
-        self.buttonBox.setObjectName(u"buttonBox")
-        self.buttonBox.setStandardButtons(QDialogButtonBox.StandardButton.NoButton)
-
-        self.gridLayout.addWidget(self.buttonBox, 2, 0, 1, 1)
-
-        self.label = QLabel(self.centralwidget)
-        self.label.setObjectName(u"label")
-
-        self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
-
         self.listWidget = QListWidget(self.centralwidget)
         self.listWidget.setObjectName(u"listWidget")
         self.listWidget.setContextMenuPolicy(Qt.ContextMenuPolicy.ActionsContextMenu)
         self.listWidget.setSelectionMode(QAbstractItemView.SelectionMode.MultiSelection)
 
         self.gridLayout.addWidget(self.listWidget, 1, 0, 1, 1)
+
+        self.label = QLabel(self.centralwidget)
+        self.label.setObjectName(u"label")
+
+        self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
+
+        self.itemVerbose = QGroupBox(self.centralwidget)
+        self.itemVerbose.setObjectName(u"itemVerbose")
+        self.verticalLayout = QVBoxLayout(self.itemVerbose)
+        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.itemVerboseTextEdit = QTextEdit(self.itemVerbose)
+        self.itemVerboseTextEdit.setObjectName(u"itemVerboseTextEdit")
+        self.itemVerboseTextEdit.setAutoFormatting(QTextEdit.AutoFormattingFlag.AutoNone)
+        self.itemVerboseTextEdit.setTextInteractionFlags(Qt.TextInteractionFlag.LinksAccessibleByKeyboard|Qt.TextInteractionFlag.LinksAccessibleByMouse|Qt.TextInteractionFlag.TextBrowserInteraction|Qt.TextInteractionFlag.TextEditable|Qt.TextInteractionFlag.TextEditorInteraction|Qt.TextInteractionFlag.TextSelectableByKeyboard|Qt.TextInteractionFlag.TextSelectableByMouse)
+
+        self.verticalLayout.addWidget(self.itemVerboseTextEdit)
+
+
+        self.gridLayout.addWidget(self.itemVerbose, 2, 0, 1, 1)
+
+        self.buttonBox = QDialogButtonBox(self.centralwidget)
+        self.buttonBox.setObjectName(u"buttonBox")
+        self.buttonBox.setStandardButtons(QDialogButtonBox.StandardButton.NoButton)
+
+        self.gridLayout.addWidget(self.buttonBox, 3, 0, 1, 1)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
@@ -90,6 +105,7 @@ class Ui_MainWindow(object):
 #if QT_CONFIG(shortcut)
         self.addItem.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+N", None))
 #endif // QT_CONFIG(shortcut)
-        self.label.setText(QCoreApplication.translate("MainWindow", u"This is a list of actions you are supposed to fulfill within a day", None))
+        self.label.setText(QCoreApplication.translate("MainWindow", u"\u042d\u0442\u043e \u0441\u043f\u0438\u0441\u043e\u043a \u0434\u0435\u043b, \u043a\u043e\u0442\u043e\u0440\u044b\u0435 \u043d\u0443\u0436\u043d\u043e \u0432\u044b\u043f\u043e\u043b\u043d\u0438\u0442\u044c \u0432 \u0442\u0435\u0447\u0435\u043d\u0438\u0435 \u0434\u043d\u044f:", None))
+        self.itemVerbose.setTitle(QCoreApplication.translate("MainWindow", u"GroupBox", None))
     # retranslateUi
 
