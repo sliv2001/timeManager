@@ -59,17 +59,22 @@ class Presenter:
     allDataLocal = []
     for item in allData[:]:
       if item[1] is None:
-        allDataLocal.append(ViewData(item[0].name, item[0].pk, PresenterStatuses.Pending, dateTime, 0, item[0].timeout))
+        allDataLocal.append(ViewData(item[0].pk, item[0].name, PresenterStatuses.Pending, dateTime, 0, item[0].timeout, item[0].comment))
       elif item[1].dateTime < dateTime:
-        allDataLocal.append(ViewData(item[0].name, item[0].pk, PresenterStatuses.Pending, item[1].dateTime, 0, item[0].timeout))
+        allDataLocal.append(ViewData(item[0].pk, item[0].name, PresenterStatuses.Pending, item[1].dateTime, 0, item[0].timeout, item[0].comment))
       else:
-        allDataLocal.append(ViewData(item[0].name, item[0].pk, item[1].status.name, item[1].dateTime, item[1].elapsedTime, item[0].timeout))
+        allDataLocal.append(ViewData(item[0].pk, item[0].name, item[1].status.name, item[1].dateTime, item[1].elapsedTime, item[0].timeout, item[0].comment))
     return allDataLocal
 
   @orm.db_session
   def getDataSinceToday(self):
     today_night = datetime.combine(date.today(), datetime.min.time())
     return self.getDataSince(today_night)
+
+  @orm.db_session
+  def _updateComment(self, itemPK, comment):
+    item = Items[itemPK]
+    item.comment = comment
 
   def RemoveItem(self, itemPK):
     self._removeItems([itemPK])
@@ -81,4 +86,8 @@ class Presenter:
 
   def SetStatus(self, itemPK, statusLine, elapsedTime = 15*60, dateTime = datetime.now()):
     self._addFulfill(itemPK, statusLine, elapsedTime, dateTime)
+    self._updateView()
+
+  def UpdateComment(self, itemPK, comment):
+    self._updateComment(itemPK, comment)
     self._updateView()
