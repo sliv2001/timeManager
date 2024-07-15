@@ -16,6 +16,7 @@ class Items(db.Entity):
   status = orm.Required(Statuses)
   fulfil = orm.Set('Fulfill')
   timeout = orm.Optional(int, default = 24*3600)
+  comment = orm.Optional(str)
 
 class Fulfill(db.Entity):
   pk = orm.PrimaryKey(int, auto=True)
