@@ -6,11 +6,14 @@ from PySide6.QtGui import QColor
 
 from timemanager.view.Ui_mainWindow import Ui_MainWindow
 from timemanager.presenter.presenter import Presenter
+from timemanager.presenter.ViewData import ViewData
 from timemanager.view.listItem import ListItem
 
 class MainWindow(QMainWindow):
 
   ui: Ui_MainWindow
+
+  previousItemPK: int = -1
 
   def __init__(self, parent: QWidget | None = ..., flags: Qt.WindowType = ...) -> None:
     super(MainWindow, self).__init__()
@@ -37,7 +40,7 @@ class MainWindow(QMainWindow):
     self.update()
 
   def drawCheckbox(self, item):
-    line = ListItem(item.itemName, item.itemPK)
+    line = ListItem(item.itemName, item.itemPK, item.comment)
     line.setFlags(line.flags() | Qt.ItemFlag.ItemIsUserCheckable)
     line.setCheckState(Qt.CheckState.Checked if item.done() else Qt.CheckState.Unchecked)
     if item.dateTime.date() < (datetime.now()-timedelta(seconds=item.timeout)).date():
@@ -51,6 +54,7 @@ class MainWindow(QMainWindow):
 
   @Slot()
   def closeButton_clicked(self, button: QAbstractButton):
+    self.saveSession()
     exit()
 
   @Slot()
@@ -69,9 +73,10 @@ class MainWindow(QMainWindow):
   @Slot()
   def changeItemSelection(self):
     currentItems = self.ui.listWidget.selectedItems()
-    self.previousItemPK = -1 if len(currentItems) != 1 else currentItems[0]
+    self.saveCurrentDetails()
     self.updateItemVerbose(currentItems)
     self.setRemovalEnabled(currentItems)
+    self.previousItemPK = -1 if len(currentItems) != 1 else currentItems[0].itemPK
 
   @Slot()
   def textViewChanged(self, index):
@@ -97,6 +102,8 @@ class MainWindow(QMainWindow):
 
   def setAndShowItemVerbose(self, currentItems):
       self.ui.itemVerbose.setTitle(currentItems[0].text())
+      self.ui.itemVerboseTextEdit.setPlainText(currentItems[0].comment)
+      self.ui.itemVerboseTextView.setMarkdown(currentItems[0].comment)
       self.ui.itemVerbose.show()
 
   def update(self):
@@ -111,3 +118,10 @@ class MainWindow(QMainWindow):
     newItem, res = QInputDialog.getText(self, 'Новый пункт', 'Название нового пункта: ')
     if res and len(newItem) > 0:
       self.presenter.AddItem(newItem)
+
+  def saveSession(self):
+    self.saveCurrentDetails()
+
+  def saveCurrentDetails(self):
+    if self.previousItemPK >= 0:
+      self.presenter.UpdateComment(self.previousItemPK, self.ui.itemVerboseTextEdit.toPlainText())
