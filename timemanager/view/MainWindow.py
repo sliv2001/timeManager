@@ -68,16 +68,17 @@ class MainWindow(QMainWindow):
 
   @Slot()
   def changeItemSelection(self):
-    self.updateItemVerbose()
-    self.setRemovalEnabled()
+    currentItems = self.ui.listWidget.selectedItems()
+    self.previousItemPK = -1 if len(currentItems) != 1 else currentItems[0]
+    self.updateItemVerbose(currentItems)
+    self.setRemovalEnabled(currentItems)
 
   @Slot()
   def textViewChanged(self, index):
     # If index is 0, we switched to MD from text, as MD is 0-th widget
     self.updateTextFormatting(index == 0)
 
-  def updateItemVerbose(self):
-    currentItems = self.ui.listWidget.selectedItems()
+  def updateItemVerbose(self, currentItems):
     if len(currentItems) == 1:
       self.setAndShowItemVerbose(currentItems)
     else:
@@ -103,8 +104,8 @@ class MainWindow(QMainWindow):
     self.drawCheckboxes()
     self.changeItemSelection()
 
-  def setRemovalEnabled(self):
-      self.ui.removeItem.setEnabled(len(self.ui.listWidget.selectedItems()) > 0)
+  def setRemovalEnabled(self, currentItems):
+      self.ui.removeItem.setEnabled(len(currentItems) > 0)
 
   def createNewItem(self):
     newItem, res = QInputDialog.getText(self, 'Новый пункт', 'Название нового пункта: ')
