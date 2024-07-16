@@ -48,7 +48,8 @@ class MainWindow(QMainWindow):
     self.ui.listWidget.addItem(line)
 
   def drawCheckboxes(self):
-    self.ui.listWidget.clear()
+    if self.ui.listWidget.count() > 0:
+      self.ui.listWidget.clear()
     for item in self.todayData:
       self.drawCheckbox(item)
 
@@ -73,9 +74,10 @@ class MainWindow(QMainWindow):
   @Slot()
   def changeItemSelection(self):
     currentItems = self.ui.listWidget.selectedItems()
-    self.saveCurrentDetails()
+    if (len(currentItems)>0):
+      self.saveCurrentDetails()
     self.drawItemDetails(currentItems)
-    self.previousItemPK = -1 if len(currentItems) != 1 else currentItems[0].itemPK
+    self.previousItemPK = -1 if len(self.ui.listWidget.selectedItems()) != 1 else currentItems[0].itemPK
 
   def drawItemDetails(self, currentItems):
       self.updateItemVerbose(currentItems)
