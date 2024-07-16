@@ -74,9 +74,12 @@ class MainWindow(QMainWindow):
   def changeItemSelection(self):
     currentItems = self.ui.listWidget.selectedItems()
     self.saveCurrentDetails()
-    self.updateItemVerbose(currentItems)
-    self.setRemovalEnabled(currentItems)
+    self.drawItemDetails(currentItems)
     self.previousItemPK = -1 if len(currentItems) != 1 else currentItems[0].itemPK
+
+  def drawItemDetails(self, currentItems):
+      self.updateItemVerbose(currentItems)
+      self.setRemovalEnabled(currentItems)
 
   @Slot()
   def textViewChanged(self, index):
@@ -109,7 +112,8 @@ class MainWindow(QMainWindow):
   def update(self):
     self.todayData = self.presenter.getDataSinceToday()
     self.drawCheckboxes()
-    self.changeItemSelection()
+    currentItems = self.ui.listWidget.selectedItems()
+    self.drawItemDetails(currentItems)
 
   def setRemovalEnabled(self, currentItems):
       self.ui.removeItem.setEnabled(len(currentItems) > 0)
