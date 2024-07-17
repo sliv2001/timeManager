@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
 from PySide6.QtCore import Qt, Slot
-from PySide6.QtWidgets import QMainWindow, QWidget, QAbstractButton, QPushButton, QDialogButtonBox, QInputDialog, QMenu
+from PySide6.QtWidgets import QMainWindow, QWidget, QAbstractButton, QPushButton, QDialogButtonBox, QInputDialog
 from PySide6.QtGui import QColor
 
 from timemanager.view.Ui_mainWindow import Ui_MainWindow
@@ -12,8 +12,6 @@ from timemanager.view.listItem import ListItem
 class MainWindow(QMainWindow):
 
   ui: Ui_MainWindow
-
-  previousItemPK: int = -1
 
   def __init__(self, parent: QWidget | None = ..., flags: Qt.WindowType = ...) -> None:
     super(MainWindow, self).__init__()
@@ -32,10 +30,7 @@ class MainWindow(QMainWindow):
     self.ui.listWidget.itemChanged.connect(slot=self.item_checked)
     self.ui.listWidget.addAction(self.ui.removeItem)
     self.ui.listWidget.addAction(self.ui.addItem)
-    self.ui.listWidget.itemSelectionChanged.connect(self.changeItemSelection)
     newItemButton.setObjectName("newItemButton")
-
-    self.ui.tabWidget.currentChanged.connect(self.textViewChanged)
 
     self.update()
 
@@ -55,7 +50,6 @@ class MainWindow(QMainWindow):
 
   @Slot()
   def closeButton_clicked(self, button: QAbstractButton):
-    self.saveSession()
     exit()
 
   @Slot()
@@ -71,51 +65,9 @@ class MainWindow(QMainWindow):
   def deleteTriggered(self):
     self.presenter.RemoveItems([item.itemPK for item in self.ui.listWidget.selectedItems()])
 
-  @Slot()
-  def changeItemSelection(self):
-    currentItems = self.ui.listWidget.selectedItems()
-    if (len(currentItems)>0):
-      self.saveCurrentDetails()
-    self.drawItemDetails(currentItems)
-    self.previousItemPK = -1 if len(self.ui.listWidget.selectedItems()) != 1 else currentItems[0].itemPK
-
-  def drawItemDetails(self, currentItems):
-      self.updateItemVerbose(currentItems)
-      self.setRemovalEnabled(currentItems)
-
-  @Slot()
-  def textViewChanged(self, index):
-    # If index is 0, we switched to MD from text, as MD is 0-th widget
-    self.updateTextFormatting(index == 0)
-
-  def updateItemVerbose(self, currentItems):
-    if len(currentItems) == 1:
-      self.setAndShowItemVerbose(currentItems)
-    else:
-      self.hideItemVerbose()
-
-
-  def updateTextFormatting(self, toMD):
-    if toMD:
-      self.ui.itemVerboseTextEdit.setPlainText(self.ui.itemVerboseTextView.toMarkdown())
-    else:
-      self.ui.itemVerboseTextView.setMarkdown(self.ui.itemVerboseTextEdit.toPlainText())
-
-
-  def hideItemVerbose(self):
-      self.ui.itemVerbose.hide()
-
-  def setAndShowItemVerbose(self, currentItems):
-      self.ui.itemVerbose.setTitle(currentItems[0].text())
-      self.ui.itemVerboseTextEdit.setPlainText(currentItems[0].comment)
-      self.ui.itemVerboseTextView.setMarkdown(currentItems[0].comment)
-      self.ui.itemVerbose.show()
-
   def update(self):
     self.todayData = self.presenter.getDataSinceToday()
     self.drawCheckboxes()
-    currentItems = self.ui.listWidget.selectedItems()
-    self.drawItemDetails(currentItems)
 
   def setRemovalEnabled(self, currentItems):
       self.ui.removeItem.setEnabled(len(currentItems) > 0)
@@ -124,10 +76,3 @@ class MainWindow(QMainWindow):
     newItem, res = QInputDialog.getText(self, 'Новый пункт', 'Название нового пункта: ')
     if res and len(newItem) > 0:
       self.presenter.AddItem(newItem)
-
-  def saveSession(self):
-    self.saveCurrentDetails()
-
-  def saveCurrentDetails(self):
-    if self.previousItemPK >= 0:
-      self.presenter.UpdateComment(self.previousItemPK, self.ui.itemVerboseTextEdit.toPlainText())
