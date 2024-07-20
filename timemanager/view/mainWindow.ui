@@ -24,7 +24,7 @@
        <enum>Qt::ContextMenuPolicy::ActionsContextMenu</enum>
       </property>
       <property name="selectionMode">
-       <enum>QAbstractItemView::SelectionMode::MultiSelection</enum>
+       <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>
       </property>
      </widget>
     </item>
@@ -36,7 +36,7 @@
      </widget>
     </item>
     <item row="2" column="0">
-     <widget class="QGroupBox" name="itemVerbose">
+     <widget class="QGroupBox" name="itemVerboseGroupBox">
       <property name="title">
        <string>GroupBox</string>
       </property>
@@ -126,6 +126,23 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="verboseItem">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::DocumentProperties"/>
+   </property>
+   <property name="text">
+    <string>Подробно</string>
+   </property>
+   <property name="toolTip">
+    <string>Получить подробную информацию об элементе и изменить свойства</string>
+   </property>
+   <property name="shortcut">
+    <string>Return</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>
