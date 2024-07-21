@@ -71,6 +71,10 @@ class Presenter:
     today_night = datetime.combine(date.today(), datetime.min.time())
     return self.getDataSince(today_night)
 
+  @orm.db_session
+  def _getItem(self, itemPK):
+    return ViewData(item=Items[itemPK])
+
   def RemoveItem(self, itemPK):
     self._removeItems([itemPK])
     self._updateView()
@@ -83,3 +87,5 @@ class Presenter:
     self._addFulfill(itemPK, statusLine, elapsedTime, dateTime)
     self._updateView()
 
+  def GetItem(self, itemPK):
+    return self._getItem(itemPK)
