@@ -71,11 +71,6 @@ class Presenter:
     today_night = datetime.combine(date.today(), datetime.min.time())
     return self.getDataSince(today_night)
 
-  @orm.db_session
-  def _updateComment(self, itemPK, comment):
-    item = Items[itemPK]
-    item.comment = comment
-
   def RemoveItem(self, itemPK):
     self._removeItems([itemPK])
     self._updateView()
@@ -88,6 +83,3 @@ class Presenter:
     self._addFulfill(itemPK, statusLine, elapsedTime, dateTime)
     self._updateView()
 
-  def UpdateComment(self, itemPK, comment):
-    self._updateComment(itemPK, comment)
-    self._updateView()
