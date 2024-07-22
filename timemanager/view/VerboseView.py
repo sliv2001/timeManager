@@ -1,4 +1,5 @@
 from PySide6.QtCore import Slot
+from PySide6.QtWidgets import QDialogButtonBox
 from timemanager.view.Ui_mainWindow import Ui_MainWindow
 from timemanager.presenter.presenter import Presenter
 
@@ -12,6 +13,8 @@ class VerboseView:
   def __init__(self, ui, presenter):
     self.ui = ui
     self.presenter = presenter
+    self.ui.itemVerboseButtonBox.button(QDialogButtonBox.StandardButton.Apply).setText("Применить")
+    self.ui.itemVerboseButtonBox.button(QDialogButtonBox.StandardButton.Close).setText("Скрыть")
     self.hide()
 
   @Slot()
