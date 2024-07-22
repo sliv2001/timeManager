@@ -8,6 +8,7 @@ from timemanager.view.Ui_mainWindow import Ui_MainWindow
 from timemanager.presenter.presenter import Presenter
 from timemanager.presenter.ViewData import ViewData
 from timemanager.view.listItem import ListItem
+from timemanager.view.VerboseView import VerboseView
 
 class MainWindow(QMainWindow):
 
@@ -18,6 +19,7 @@ class MainWindow(QMainWindow):
     self.ui = Ui_MainWindow()
     self.ui.setupUi(self)
     self.presenter = Presenter(self)
+    self.verboseView = VerboseView(self.ui, self.presenter)
     closeButton = QPushButton(text="Закрыть", parent=self.ui.buttonBox)
     closeButton.setObjectName("closeButton")
     closeButton.clicked.connect(slot=self.closeButton_clicked)
@@ -27,6 +29,7 @@ class MainWindow(QMainWindow):
     self.ui.buttonBox.addButton(newItemButton, QDialogButtonBox.ButtonRole.ActionRole)
     self.ui.removeItem.triggered.connect(slot=self.deleteTriggered)
     self.ui.addItem.triggered.connect(slot=self.addTriggered)
+    self.ui.verboseItem.triggered.connect(slot=self.verboseView.show)
     self.ui.listWidget.itemChanged.connect(slot=self.item_checked)
     self.ui.listWidget.addAction(self.ui.removeItem)
     self.ui.listWidget.addAction(self.ui.addItem)
@@ -35,7 +38,7 @@ class MainWindow(QMainWindow):
     self.update()
 
   def drawCheckbox(self, item):
-    line = ListItem(item.itemName, item.itemPK, item.comment)
+    line = ListItem(item.itemName, item.itemPK)
     line.setFlags(line.flags() | Qt.ItemFlag.ItemIsUserCheckable)
     line.setCheckState(Qt.CheckState.Checked if item.done() else Qt.CheckState.Unchecked)
     if item.dateTime.date() < (datetime.now()-timedelta(seconds=item.timeout)).date():
@@ -63,7 +66,9 @@ class MainWindow(QMainWindow):
 
   @Slot()
   def deleteTriggered(self):
-    self.presenter.RemoveItems([item.itemPK for item in self.ui.listWidget.selectedItems()])
+    currentItems = self.ui.listWidget.selectedItems()
+    if len(currentItems) > 0:
+      self.presenter.RemoveItems([item.itemPK for item in self.ui.listWidget.selectedItems()])
 
   def update(self):
     self.todayData = self.presenter.getDataSinceToday()

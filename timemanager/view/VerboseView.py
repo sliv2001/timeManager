@@ -12,13 +12,14 @@ class VerboseView:
   def __init__(self, ui, presenter):
     self.ui = ui
     self.presenter = presenter
+    self.hide()
 
   @Slot()
   def show(self):
     currentItems = self.ui.listWidget.selectedItems()
     if len(currentItems) == 1:
       currentItemData = self.presenter.GetItem(currentItems[0].itemPK)
-      self.ui.itemVerboseGroupBox.setTitle(currentItemData)
+      self.ui.itemVerboseGroupBox.setTitle(currentItemData.itemName)
       self.ui.itemVerboseTextEdit.setMarkdown(currentItemData.comment)
       self.ui.itemVerboseTextView.setPlainText(self.ui.itemVerboseTextEdit.toPlainText())
       self.ui.itemVerboseGroupBox.show()
@@ -28,4 +29,4 @@ class VerboseView:
 
   @Slot()
   def hide(self):
-    pass
+    self.ui.itemVerboseGroupBox.hide()
