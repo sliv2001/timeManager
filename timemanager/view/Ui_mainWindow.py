@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'mainWindowdSBSbZ.ui'
+## Form generated from reading UI file 'mainWindowVZSHPQ.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -27,6 +27,7 @@ class Ui_MainWindow(object):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.resize(800, 600)
+        MainWindow.setLocale(QLocale(QLocale.Russian, QLocale.Russia))
         MainWindow.setUnifiedTitleAndToolBarOnMac(True)
         self.removeItem = QAction(MainWindow)
         self.removeItem.setObjectName(u"removeItem")
@@ -45,6 +46,11 @@ class Ui_MainWindow(object):
         icon2 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.DocumentProperties))
         self.verboseItem.setIcon(icon2)
         self.verboseItem.setMenuRole(QAction.MenuRole.NoRole)
+        self.closeVerboseItem = QAction(MainWindow)
+        self.closeVerboseItem.setObjectName(u"closeVerboseItem")
+        icon3 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.EditClear))
+        self.closeVerboseItem.setIcon(icon3)
+        self.closeVerboseItem.setMenuRole(QAction.MenuRole.NoRole)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
@@ -91,11 +97,19 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.tabWidget)
 
+        self.itemVerboseButtonBox = QDialogButtonBox(self.itemVerboseGroupBox)
+        self.itemVerboseButtonBox.setObjectName(u"itemVerboseButtonBox")
+        self.itemVerboseButtonBox.setLocale(QLocale(QLocale.Russian, QLocale.Russia))
+        self.itemVerboseButtonBox.setStandardButtons(QDialogButtonBox.StandardButton.Apply|QDialogButtonBox.StandardButton.Close)
+
+        self.verticalLayout.addWidget(self.itemVerboseButtonBox)
+
 
         self.gridLayout.addWidget(self.itemVerboseGroupBox, 2, 0, 1, 1)
 
         self.buttonBox = QDialogButtonBox(self.centralwidget)
         self.buttonBox.setObjectName(u"buttonBox")
+        self.buttonBox.setLocale(QLocale(QLocale.Russian, QLocale.Russia))
         self.buttonBox.setStandardButtons(QDialogButtonBox.StandardButton.NoButton)
 
         self.gridLayout.addWidget(self.buttonBox, 3, 0, 1, 1)
@@ -111,6 +125,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         self.listWidget.itemDoubleClicked.connect(self.verboseItem.trigger)
+        self.itemVerboseButtonBox.rejected.connect(self.closeVerboseItem.trigger)
 
         self.tabWidget.setCurrentIndex(0)
 
@@ -140,6 +155,13 @@ class Ui_MainWindow(object):
 #endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(shortcut)
         self.verboseItem.setShortcut(QCoreApplication.translate("MainWindow", u"Return", None))
+#endif // QT_CONFIG(shortcut)
+        self.closeVerboseItem.setText(QCoreApplication.translate("MainWindow", u"\u0421\u043a\u0440\u044b\u0442\u044c \u043f\u043e\u0434\u0440\u043e\u0431\u043d\u043e\u0441\u0442\u0438", None))
+#if QT_CONFIG(tooltip)
+        self.closeVerboseItem.setToolTip(QCoreApplication.translate("MainWindow", u"\u0421\u043a\u0440\u044b\u0442\u044c \u043f\u043e\u0434\u0440\u043e\u0431\u043d\u043e\u0441\u0442\u0438 \u043e\u0431 \u044d\u043b\u0435\u043c\u0435\u043d\u0442\u0435", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(shortcut)
+        self.closeVerboseItem.setShortcut(QCoreApplication.translate("MainWindow", u"Esc", None))
 #endif // QT_CONFIG(shortcut)
         self.label.setText(QCoreApplication.translate("MainWindow", u"\u042d\u0442\u043e \u0441\u043f\u0438\u0441\u043e\u043a \u0434\u0435\u043b, \u043a\u043e\u0442\u043e\u0440\u044b\u0435 \u043d\u0443\u0436\u043d\u043e \u0432\u044b\u043f\u043e\u043b\u043d\u0438\u0442\u044c \u0432 \u0442\u0435\u0447\u0435\u043d\u0438\u0435 \u0434\u043d\u044f:", None))
         self.itemVerboseGroupBox.setTitle(QCoreApplication.translate("MainWindow", u"GroupBox", None))

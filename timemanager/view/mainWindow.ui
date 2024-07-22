@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="locale">
+   <locale language="Russian" country="Russia"/>
+  </property>
   <property name="unifiedTitleAndToolBarOnMac">
    <bool>true</bool>
   </property>
@@ -68,11 +71,24 @@
          </widget>
         </widget>
        </item>
+       <item>
+        <widget class="QDialogButtonBox" name="itemVerboseButtonBox">
+         <property name="locale">
+          <locale language="Russian" country="Russia"/>
+         </property>
+         <property name="standardButtons">
+          <set>QDialogButtonBox::StandardButton::Apply|QDialogButtonBox::StandardButton::Close</set>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </item>
     <item row="3" column="0">
      <widget class="QDialogButtonBox" name="buttonBox">
+      <property name="locale">
+       <locale language="Russian" country="Russia"/>
+      </property>
       <property name="standardButtons">
        <set>QDialogButtonBox::StandardButton::NoButton</set>
       </property>
@@ -148,6 +164,23 @@
     <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
+  <action name="closeVerboseItem">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::EditClear"/>
+   </property>
+   <property name="text">
+    <string>Скрыть подробности</string>
+   </property>
+   <property name="toolTip">
+    <string>Скрыть подробности об элементе</string>
+   </property>
+   <property name="shortcut">
+    <string>Esc</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections>
@@ -160,6 +193,22 @@
     <hint type="sourcelabel">
      <x>399</x>
      <y>172</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>itemVerboseButtonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>closeVerboseItem</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>398</x>
+     <y>528</y>
     </hint>
     <hint type="destinationlabel">
      <x>-1</x>
