@@ -13,22 +13,23 @@ class ViewData():
     self.elapsedTime = elapsedTime
     self.comment = comment
 
+  @classmethod
   @orm.db_session
-  def __init__(self, item: Items = None, fulfill: Fulfill = None):
+  def fromModel(cls, item: Items = None, fulfill: Fulfill = None):
     if item is None and fulfill is None:
       raise RuntimeError('Cannot create View Data with empty initializers')
     if item is not None:
-      self.itemName = item.name
-      self.itemPK = item.pk
-      self.timeout = item.timeout
-      statusEntry = Statuses[item.status]
-      self.status = statusEntry.name
-      self.comment = item.comment
-      self.dateTime = None
-      self.elapsedTime = None
+      itemName = item.name
+      itemPK = item.pk
+      timeout = item.timeout
+      status = item.status.name
+      comment = item.comment
+      dateTime = None
+      elapsedTime = None
     if fulfill is not None:
-      self.dateTime = fulfill.dateTime
-      self.elapsedTime = fulfill.elapsedTime
+      dateTime = fulfill.dateTime
+      elapsedTime = fulfill.elapsedTime
+    return cls(itemPK, itemName, status, dateTime, elapsedTime, timeout, comment)
 
   def done(self):
     return self.status == PresenterStatuses.Done

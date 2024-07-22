@@ -73,7 +73,7 @@ class Presenter:
 
   @orm.db_session
   def _getItem(self, itemPK):
-    return ViewData(item=Items[itemPK])
+    return ViewData.fromModel(item=Items[itemPK])
 
   def RemoveItem(self, itemPK):
     self._removeItems([itemPK])
