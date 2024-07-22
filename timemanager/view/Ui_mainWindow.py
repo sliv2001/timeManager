@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'mainWindowVqifaa.ui'
+## Form generated from reading UI file 'mainWindowdSBSbZ.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -110,6 +110,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
+        self.listWidget.itemDoubleClicked.connect(self.verboseItem.trigger)
 
         self.tabWidget.setCurrentIndex(0)
 
