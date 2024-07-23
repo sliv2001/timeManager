@@ -34,9 +34,8 @@ class Presenter:
 
   @orm.db_session
   def _removeItems(self, itemPKs):
-    statusEntry = Statuses.get(name=PresenterStatuses.Removed)
     for itemPK in itemPKs:
-      Items[itemPK].status = statusEntry
+      self._updateItem(ViewData(itemPK, status=PresenterStatuses.Removed))
 
   def _updateView(self):
     self.view.update()
@@ -75,6 +74,19 @@ class Presenter:
   def _getItem(self, itemPK):
     return ViewData.fromModel(item=Items[itemPK])
 
+  @orm.db_session
+  def _updateItem(self, item: ViewData):
+    itemEntry = Items[item.itemPK]
+    if item.comment is not None:
+      itemEntry.comment = item.comment
+    if item.itemName is not None:
+      itemEntry.name = item.itemName
+    if item.status is not None:
+      statusEntry = Statuses.get(name=item.status)
+      itemEntry.status = statusEntry
+    if item.timeout is not None:
+      itemEntry.timeout = item.timeout
+
   def RemoveItem(self, itemPK):
     self._removeItems([itemPK])
     self._updateView()
@@ -89,3 +101,6 @@ class Presenter:
 
   def GetItem(self, itemPK):
     return self._getItem(itemPK)
+
+  def UpdateItem(self, item: ViewData):
+    self._updateItem(item)
