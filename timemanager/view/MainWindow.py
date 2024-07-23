@@ -25,6 +25,7 @@ class MainWindow(QMainWindow):
     closeButton.clicked.connect(slot=self.closeButton_clicked)
     newItemButton = QPushButton(text="Создать", parent=self.ui.buttonBox)
     newItemButton.clicked.connect(slot=self.ui.addItem.trigger)
+    newItemButton.setObjectName("newItemButton")
     self.ui.buttonBox.addButton(closeButton, QDialogButtonBox.ButtonRole.DestructiveRole)
     self.ui.buttonBox.addButton(newItemButton, QDialogButtonBox.ButtonRole.ActionRole)
     self.ui.removeItem.triggered.connect(slot=self.deleteTriggered)
@@ -33,8 +34,7 @@ class MainWindow(QMainWindow):
     self.ui.listWidget.itemChanged.connect(slot=self.item_checked)
     self.ui.listWidget.addAction(self.ui.removeItem)
     self.ui.listWidget.addAction(self.ui.addItem)
-    newItemButton.setObjectName("newItemButton")
-
+    self.ui.listWidget.addAction(self.ui.verboseItem)
     self.update()
 
   def drawCheckbox(self, item):
