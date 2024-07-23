@@ -2,11 +2,12 @@ from PySide6.QtCore import Slot
 from PySide6.QtWidgets import QDialogButtonBox
 from timemanager.view.Ui_mainWindow import Ui_MainWindow
 from timemanager.presenter.presenter import Presenter
+from timemanager.presenter.ViewData import ViewData
 
 class VerboseView:
   itemPK: int = -1
-  name: str
-  verboseText: str
+  name: str = ""
+  verboseText: str = ""
   ui: Ui_MainWindow
   presenter: Presenter
 
@@ -14,6 +15,7 @@ class VerboseView:
     self.ui = ui
     self.presenter = presenter
     self.ui.itemVerboseButtonBox.button(QDialogButtonBox.StandardButton.Apply).setText("Применить")
+    self.ui.itemVerboseButtonBox.button(QDialogButtonBox.StandardButton.Apply).clicked.connect(self.saveAndHide)
     self.ui.itemVerboseButtonBox.button(QDialogButtonBox.StandardButton.Close).setText("Скрыть")
     self.hide()
 
@@ -21,14 +23,34 @@ class VerboseView:
   def show(self):
     currentItems = self.ui.listWidget.selectedItems()
     if len(currentItems) == 1:
-      currentItemData = self.presenter.GetItem(currentItems[0].itemPK)
-      self.ui.itemVerboseGroupBox.setTitle(currentItemData.itemName)
-      self.ui.itemVerboseTextEdit.setMarkdown(currentItemData.comment)
-      self.ui.itemVerboseTextView.setPlainText(self.ui.itemVerboseTextEdit.toPlainText())
-      self.ui.itemVerboseGroupBox.show()
+      currentItem = self.ui.listWidget.selectedItems()[0]
+      self.updateInterface(currentItem)
 
     else:
       raise RuntimeError("One item must be chosen for showing verbose view!")
+
+  def updateInterface(self, currentItem):
+      currentItemData = self.presenter.GetItem(currentItem.itemPK)
+      self.itemPK = currentItem.itemPK
+      self.name = currentItemData.itemName
+      self.verboseText = currentItemData.comment
+      self._drawInterface()
+
+  def _drawInterface(self):
+      self.ui.itemVerboseGroupBox.setTitle(self.name)
+      self.ui.itemVerboseTextEdit.setMarkdown(self.verboseText)
+      self.ui.itemVerboseTextView.setPlainText(self.ui.itemVerboseTextEdit.toPlainText())
+      self.ui.itemVerboseGroupBox.show()
+
+  @Slot()
+  def saveAndHide(self):
+    self.hide()
+    self.save()
+
+  @Slot()
+  def save(self):
+    self.verboseText = self.ui.itemVerboseTextEdit.toPlainText()
+    self.presenter.UpdateItem(ViewData(self.itemPK, comment=self.verboseText))
 
   @Slot()
   def hide(self):
