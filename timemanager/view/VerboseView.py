@@ -17,6 +17,7 @@ class VerboseView:
     self.ui.itemVerboseButtonBox.button(QDialogButtonBox.StandardButton.Apply).setText("Применить")
     self.ui.itemVerboseButtonBox.button(QDialogButtonBox.StandardButton.Apply).clicked.connect(self.saveAndHide)
     self.ui.itemVerboseButtonBox.button(QDialogButtonBox.StandardButton.Close).setText("Скрыть")
+    self.ui.itemVerboseButtonBox.button(QDialogButtonBox.StandardButton.Close).clicked.connect(self.hide)
     self.hide()
 
   @Slot()
@@ -38,8 +39,8 @@ class VerboseView:
 
   def _drawInterface(self):
       self.ui.itemVerboseGroupBox.setTitle(self.name)
-      self.ui.itemVerboseTextEdit.setMarkdown(self.verboseText)
-      self.ui.itemVerboseTextView.setPlainText(self.ui.itemVerboseTextEdit.toPlainText())
+      self.ui.itemVerboseTextEdit.setPlainText(self.verboseText)
+      self.ui.itemVerboseTextView.setMarkdown(self.ui.itemVerboseTextEdit.toPlainText())
       self.ui.itemVerboseGroupBox.show()
 
   @Slot()
