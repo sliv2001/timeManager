@@ -32,6 +32,7 @@ class MainWindow(QMainWindow):
     self.ui.addItem.triggered.connect(slot=self.addTriggered)
     self.ui.verboseItem.triggered.connect(slot=self.verboseView.show)
     self.ui.listWidget.itemChanged.connect(slot=self.item_checked)
+    self.ui.listWidget.itemSelectionChanged.connect(slot=self.enableItemEditActions)
     self.ui.listWidget.addAction(self.ui.removeItem)
     self.ui.listWidget.addAction(self.ui.addItem)
     self.ui.listWidget.addAction(self.ui.verboseItem)
@@ -65,17 +66,24 @@ class MainWindow(QMainWindow):
       self.presenter.SetStatus(itemPK=item.itemPK, statusLine='DONE', elapsedTime=15*60, dateTime=datetime.now())
 
   @Slot()
+  def enableItemEditActions(self):
+    enable = len(self.ui.listWidget.selectedItems()) > 0
+    self.ui.removeItem.setEnabled(enable)
+    self.ui.verboseItem.setEnabled(enable)
+
+  @Slot()
   def deleteTriggered(self):
     currentItems = self.ui.listWidget.selectedItems()
     if len(currentItems) > 0:
       self.presenter.RemoveItems([item.itemPK for item in self.ui.listWidget.selectedItems()])
 
+    else:
+      raise RuntimeError('Delete triggered for empty range of objects!')
+
   def update(self):
     self.todayData = self.presenter.getDataSinceToday()
     self.drawCheckboxes()
-
-  def setRemovalEnabled(self, currentItems):
-      self.ui.removeItem.setEnabled(len(currentItems) > 0)
+    self.enableItemEditActions()
 
   def createNewItem(self):
     newItem, res = QInputDialog.getText(self, 'Новый пункт', 'Название нового пункта: ')
