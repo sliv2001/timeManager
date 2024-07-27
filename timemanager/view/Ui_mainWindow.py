@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'mainWindowVZSHPQ.ui'
+## Form generated from reading UI file 'mainWindowiuuZpU.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -18,9 +18,9 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QTransform)
 from PySide6.QtWidgets import (QAbstractButton, QAbstractItemView, QApplication, QDialogButtonBox,
     QGridLayout, QGroupBox, QLabel, QListWidget,
-    QListWidgetItem, QMainWindow, QMenuBar, QSizePolicy,
-    QStatusBar, QTabWidget, QTextEdit, QVBoxLayout,
-    QWidget)
+    QListWidgetItem, QMainWindow, QMenuBar, QPlainTextEdit,
+    QSizePolicy, QStatusBar, QTabWidget, QTextEdit,
+    QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -77,7 +77,7 @@ class Ui_MainWindow(object):
         self.markdown.setObjectName(u"markdown")
         self.verticalLayout_2 = QVBoxLayout(self.markdown)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.itemVerboseTextEdit = QTextEdit(self.markdown)
+        self.itemVerboseTextEdit = QPlainTextEdit(self.markdown)
         self.itemVerboseTextEdit.setObjectName(u"itemVerboseTextEdit")
 
         self.verticalLayout_2.addWidget(self.itemVerboseTextEdit)
@@ -117,7 +117,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 800, 33))
+        self.menubar.setGeometry(QRect(0, 0, 800, 36))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
