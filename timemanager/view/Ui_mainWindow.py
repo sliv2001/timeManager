@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'mainWindowiuuZpU.ui'
+## Form generated from reading UI file 'mainWindowAAfQGe.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -51,6 +51,10 @@ class Ui_MainWindow(object):
         icon3 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.EditClear))
         self.closeVerboseItem.setIcon(icon3)
         self.closeVerboseItem.setMenuRole(QAction.MenuRole.NoRole)
+        self.checkItem = QAction(MainWindow)
+        self.checkItem.setObjectName(u"checkItem")
+        self.checkItem.setCheckable(True)
+        self.checkItem.setMenuRole(QAction.MenuRole.NoRole)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
@@ -162,6 +166,13 @@ class Ui_MainWindow(object):
 #endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(shortcut)
         self.closeVerboseItem.setShortcut(QCoreApplication.translate("MainWindow", u"Esc", None))
+#endif // QT_CONFIG(shortcut)
+        self.checkItem.setText(QCoreApplication.translate("MainWindow", u"\u041e\u0442\u043c\u0435\u0442\u0438\u0442\u044c \u043a\u0430\u043a \u0432\u044b\u043f\u043e\u043b\u043d\u0435\u043d\u043d\u043e\u0435", None))
+#if QT_CONFIG(tooltip)
+        self.checkItem.setToolTip(QCoreApplication.translate("MainWindow", u"\u041e\u0442\u043c\u0435\u0442\u0438\u0442\u044c \u0434\u0430\u043d\u043d\u044b\u0439 \u044d\u043b\u0435\u043c\u0435\u043d\u0442 \u043a\u0430\u043a \u0432\u044b\u043f\u043e\u043b\u043d\u0435\u043d\u043d\u044b\u0439", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(shortcut)
+        self.checkItem.setShortcut(QCoreApplication.translate("MainWindow", u"Space", None))
 #endif // QT_CONFIG(shortcut)
         self.label.setText(QCoreApplication.translate("MainWindow", u"\u042d\u0442\u043e \u0441\u043f\u0438\u0441\u043e\u043a \u0434\u0435\u043b, \u043a\u043e\u0442\u043e\u0440\u044b\u0435 \u043d\u0443\u0436\u043d\u043e \u0432\u044b\u043f\u043e\u043b\u043d\u0438\u0442\u044c \u0432 \u0442\u0435\u0447\u0435\u043d\u0438\u0435 \u0434\u043d\u044f:", None))
         self.itemVerboseGroupBox.setTitle(QCoreApplication.translate("MainWindow", u"GroupBox", None))

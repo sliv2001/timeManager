@@ -181,6 +181,23 @@
     <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
+  <action name="checkItem">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Отметить как выполненное</string>
+   </property>
+   <property name="toolTip">
+    <string>Отметить данный элемент как выполненный</string>
+   </property>
+   <property name="shortcut">
+    <string>Space</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections>
