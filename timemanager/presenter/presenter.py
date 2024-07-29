@@ -99,6 +99,14 @@ class Presenter:
     self._addFulfill(itemPK, statusLine, elapsedTime, dateTime)
     self._updateView()
 
+  def SetItemDone(self, itemPK: int, status: bool, elapsedTime: int = 15*60, dateTime: datetime = datetime.now()):
+    if status:
+      statueLine = PresenterStatuses.Done
+    else:
+      statueLine = PresenterStatuses.
+    self._addFulfill
+    ...
+
   def GetItem(self, itemPK):
     return self._getItem(itemPK)
 

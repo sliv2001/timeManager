@@ -31,11 +31,13 @@ class MainWindow(QMainWindow):
     self.ui.removeItem.triggered.connect(slot=self.deleteTriggered)
     self.ui.addItem.triggered.connect(slot=self.addTriggered)
     self.ui.verboseItem.triggered.connect(slot=self.verboseView.show)
+    self.ui.checkItem.triggered.connect(slot=self.checkTriggered)
     self.ui.listWidget.itemChanged.connect(slot=self.item_checked)
     self.ui.listWidget.itemSelectionChanged.connect(slot=self.enableItemEditActions)
-    self.ui.listWidget.addAction(self.ui.removeItem)
     self.ui.listWidget.addAction(self.ui.addItem)
+    self.ui.listWidget.addAction(self.ui.removeItem)
     self.ui.listWidget.addAction(self.ui.verboseItem)
+    self.ui.listWidget.addAction(self.ui.checkItem)
     self.update()
 
   def drawCheckbox(self, item):
@@ -79,6 +81,10 @@ class MainWindow(QMainWindow):
 
     else:
       raise RuntimeError('Delete triggered for empty range of objects!')
+
+  @Slot()
+  def checkTriggered(self):
+    currentItems = 
 
   def update(self):
     self.todayData = self.presenter.getDataSinceToday()
