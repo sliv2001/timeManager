@@ -66,6 +66,15 @@ class Presenter:
     return allDataLocal
 
   @orm.db_session
+  def _getPreviousFulfillmentStatus(self, itemPK):
+    todayNight = datetime.combine(date.today(), datetime.min.time())
+    data = orm.select(ff for ff in Items[itemPK].fulfil if ff.dateTime >= todayNight).order_by(Fulfill.dateTime)
+    if len(data) < 2:
+      return PresenterStatuses.Pending
+    else:
+      return data[:][1].status.name
+
+  @orm.db_session
   def getDataSinceToday(self):
     today_night = datetime.combine(date.today(), datetime.min.time())
     return self.getDataSince(today_night)
@@ -100,12 +109,16 @@ class Presenter:
     self._updateView()
 
   def SetItemDone(self, itemPK: int, status: bool, elapsedTime: int = 15*60, dateTime: datetime = datetime.now()):
+    self._setItemDone(itemPK, status, elapsedTime, dateTime)
+
+  @orm.db_session
+  def _setItemDone(self, itemPK, status, elapsedTime, dateTime):
     if status:
-      statueLine = PresenterStatuses.Done
+      statusLine = PresenterStatuses.Done
     else:
-      statueLine = PresenterStatuses.
-    self._addFulfill
-    ...
+      statusLine = self._getPreviousFulfillmentStatus(itemPK)
+    self._addFulfill(itemPK, statusLine, elapsedTime, dateTime)
+    self._updateView()
 
   def GetItem(self, itemPK):
     return self._getItem(itemPK)
