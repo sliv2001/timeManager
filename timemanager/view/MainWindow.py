@@ -84,7 +84,10 @@ class MainWindow(QMainWindow):
 
   @Slot()
   def checkTriggered(self):
-    currentItems = 
+    currentItems = self.ui.listWidget.selectedItems()
+    if len(currentItems) == 1:
+      currentItem = currentItems[0]
+      self.presenter.SetItemDone(currentItem.itemPK, currentItem.checkState() != Qt.CheckState.Checked)
 
   def update(self):
     self.todayData = self.presenter.getDataSinceToday()
