@@ -2,7 +2,7 @@ from datetime import datetime, date
 from pony import orm
 from timemanager.model.model import Fulfill, Items, Statuses
 from .ViewData import ViewData
-from .Statuses import Statuses as PresenterStatuses
+from .Statuses import ModelStatuses, ViewStatuses, ModelFulfillments, AllModelNames
 
 class Presenter:
   def __init__(self, view) -> None:
@@ -15,7 +15,7 @@ class Presenter:
   def initStatuses(self):
     try:
       with orm.db_session:
-        for statusLine in PresenterStatuses.AllModelStatuses():
+        for statusLine in AllModelNames():
           status = Statuses(name=statusLine)
     except orm.TransactionIntegrityError as e:
       pass
@@ -35,12 +35,12 @@ class Presenter:
   @orm.db_session
   def _removeItems(self, itemPKs):
     for itemPK in itemPKs:
-      self._updateItem(ViewData(itemPK, status=PresenterStatuses.Removed))
+      self._updateItem(ViewData(itemPK, status=ModelStatuses.Removed))
 
   def _updateView(self):
     self.view.update()
 
-  def AddItem(self, itemName, statusLine = PresenterStatuses.Active):
+  def AddItem(self, itemName, statusLine = ModelStatuses.Active):
     pk = self._addItem(itemName, statusLine)
     self._updateView()
     return pk
@@ -53,14 +53,14 @@ class Presenter:
     #     or has never been mentioned
     # These requests are then sorted by pk and chosen only those with todays fulfillment date
     allData = orm.left_join((item, ff) for item in Items for ff in item.fulfil
-                            if item.status.name == PresenterStatuses.Active and
+                            if item.status.name == ModelStatuses.Active and
                               ((ff.dateTime == max(ff.dateTime for ff in item.fulfil)) or ff is None)).order_by(1)
     allDataLocal = []
     for item in allData[:]:
       if item[1] is None:
-        allDataLocal.append(ViewData(item[0].pk, item[0].name, PresenterStatuses.Pending, dateTime, 0, item[0].timeout, item[0].comment))
+        allDataLocal.append(ViewData(item[0].pk, item[0].name, ViewStatuses.Undone, dateTime, 0, item[0].timeout, item[0].comment))
       elif item[1].dateTime < dateTime:
-        allDataLocal.append(ViewData(item[0].pk, item[0].name, PresenterStatuses.Pending, item[1].dateTime, 0, item[0].timeout, item[0].comment))
+        allDataLocal.append(ViewData(item[0].pk, item[0].name, ViewStatuses.Undone, item[1].dateTime, 0, item[0].timeout, item[0].comment))
       else:
         allDataLocal.append(ViewData(item[0].pk, item[0].name, item[1].status.name, item[1].dateTime, item[1].elapsedTime, item[0].timeout, item[0].comment))
     return allDataLocal
@@ -70,7 +70,7 @@ class Presenter:
     todayNight = datetime.combine(date.today(), datetime.min.time())
     data = orm.select(ff for ff in Items[itemPK].fulfil if ff.dateTime >= todayNight).order_by(Fulfill.dateTime)
     if len(data) < 2:
-      return PresenterStatuses.Pending
+      return ViewStatuses.Undone
     else:
       return data[:][1].status.name
 
@@ -110,7 +110,7 @@ class Presenter:
   @orm.db_session
   def _setItemDone(self, itemPK, status, elapsedTime, dateTime):
     if status:
-      statusLine = PresenterStatuses.Done
+      statusLine = ModelFulfillments.Done
     else:
       statusLine = self._getPreviousFulfillmentStatus(itemPK)
     self._addFulfill(itemPK, statusLine, elapsedTime, dateTime)

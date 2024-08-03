@@ -1,6 +1,6 @@
 from pony import orm
 from timemanager.model.model import Fulfill, Items, Statuses
-from .Statuses import Statuses as PresenterStatuses
+from .Statuses import ViewStatuses
 
 class ViewData():
 
@@ -32,4 +32,4 @@ class ViewData():
     return cls(itemPK, itemName, status, dateTime, elapsedTime, timeout, comment)
 
   def done(self):
-    return self.status == PresenterStatuses.Done
+    return self.status == ViewStatuses.Done
