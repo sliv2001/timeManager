@@ -15,7 +15,7 @@ class Presenter:
   def initStatuses(self):
     try:
       with orm.db_session:
-        for statusLine in PresenterStatuses.AllStatuses():
+        for statusLine in PresenterStatuses.AllModelStatuses():
           status = Statuses(name=statusLine)
     except orm.TransactionIntegrityError as e:
       pass
