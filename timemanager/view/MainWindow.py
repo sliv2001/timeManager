@@ -33,26 +33,14 @@ class MainWindow(QMainWindow):
     self.ui.verboseItem.triggered.connect(slot=self.verboseView.show)
     self.ui.checkItem.triggered.connect(slot=self.checkTriggered)
     self.ui.listWidget.itemChanged.connect(slot=self.item_checked)
-    self.ui.listWidget.itemSelectionChanged.connect(slot=self.enableItemEditActions)
+    self.ui.listWidget.itemSelectionChanged.connect(slot=self.itemSelectionChanged)
     self.ui.listWidget.addAction(self.ui.addItem)
     self.ui.listWidget.addAction(self.ui.removeItem)
     self.ui.listWidget.addAction(self.ui.verboseItem)
     self.ui.listWidget.addAction(self.ui.checkItem)
     self.update()
 
-  def drawCheckbox(self, item):
-    line = ListItem(item.itemName, item.itemPK)
-    line.setFlags(line.flags() | Qt.ItemFlag.ItemIsUserCheckable)
-    line.setCheckState(Qt.CheckState.Checked if item.done() else Qt.CheckState.Unchecked)
-    if item.dateTime.date() < (datetime.now()-timedelta(seconds=item.timeout)).date():
-      line.setBackground(QColor("Red"))
-    self.ui.listWidget.addItem(line)
-
-  def drawCheckboxes(self):
-    if self.ui.listWidget.count() > 0:
-      self.ui.listWidget.clear()
-    for item in self.todayData:
-      self.drawCheckbox(item)
+####### Events handling slots
 
   @Slot()
   def closeButton_clicked(self, button: QAbstractButton):
@@ -68,10 +56,8 @@ class MainWindow(QMainWindow):
       self.presenter.SetStatus(itemPK=item.itemPK, statusLine='DONE', elapsedTime=15*60, dateTime=datetime.now())
 
   @Slot()
-  def enableItemEditActions(self):
-    enable = len(self.ui.listWidget.selectedItems()) > 0
-    self.ui.removeItem.setEnabled(enable)
-    self.ui.verboseItem.setEnabled(enable)
+  def itemSelectionChanged(self):
+    self.enableItemEditActions()
 
   @Slot()
   def deleteTriggered(self):
@@ -89,10 +75,31 @@ class MainWindow(QMainWindow):
       currentItem = currentItems[0]
       self.presenter.SetItemDone(currentItem.itemPK, currentItem.checkState() != Qt.CheckState.Checked)
 
+  ####### UI Updating facilities
+
+  def drawCheckbox(self, item):
+    line = ListItem(item.itemName, item.itemPK)
+    line.setFlags(line.flags() | Qt.ItemFlag.ItemIsUserCheckable)
+    line.setCheckState(Qt.CheckState.Checked if item.done() else Qt.CheckState.Unchecked)
+    if item.dateTime.date() < (datetime.now()-timedelta(seconds=item.timeout)).date():
+      line.setBackground(QColor("Red"))
+    self.ui.listWidget.addItem(line)
+
+  def drawCheckboxes(self):
+    if self.ui.listWidget.count() > 0:
+      self.ui.listWidget.clear()
+    for item in self.todayData:
+      self.drawCheckbox(item)
+
   def update(self):
     self.todayData = self.presenter.getDataSinceToday()
     self.drawCheckboxes()
     self.enableItemEditActions()
+
+  def enableItemEditActions(self):
+    enable = len(self.ui.listWidget.selectedItems()) > 0
+    self.ui.removeItem.setEnabled(enable)
+    self.ui.verboseItem.setEnabled(enable)
 
   def createNewItem(self):
     newItem, res = QInputDialog.getText(self, 'Новый пункт', 'Название нового пункта: ')
