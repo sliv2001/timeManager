@@ -52,24 +52,24 @@ class Presenter:
     #   - It either has maximum time among fulfillments of current item,
     #     or has never been mentioned
     # These requests are then sorted by pk and chosen only those with todays fulfillment date
-    allData = orm.left_join((item, ff) for item in Items for ff in item.fulfil
+    allData = orm.left_join((item.pk, item.name, item.timeout, ff.pk, ff.dateTime, ff.status) for item in Items for ff in item.fulfil
                             if item.status.name == ModelStatuses.Active and
                               ((ff.dateTime == max(ff.dateTime for ff in item.fulfil)) or ff is None)).order_by(1)
 
     allDataLocal = []
     currentDateTime = datetime.now()
-    for item in allData[:]:
-      if item[1] is None:
-        allDataLocal.append(ViewData(item[0].pk, item[0].name, ViewStatuses.Undone, dateTime, 0, item[0].timeout, item[0].comment))
+    for itemPK, itemName, itemTimeout, ffPk, ffDateTime, ffStatus in allData[:]:
+      if ffPk is None:
+        allDataLocal.append(ViewData(itemPK, itemName, ViewStatuses.Undone))
       else:
-        itemDt = item[1].dateTime
+        itemDt = ffDateTime
         if itemDt < dateTime:
-          if item[1].dateTime.date() < (currentDateTime-timedelta(seconds=item[0].timeout)).date():
-            allDataLocal.append(ViewData(item[0].pk, item[0].name, ViewStatuses.Outdated, item[1].dateTime, 0, item[0].timeout, item[0].comment))
+          if ffDateTime.date() < (currentDateTime-timedelta(seconds=itemTimeout)).date():
+            allDataLocal.append(ViewData(itemPK, itemName, ViewStatuses.Outdated))
           else:
-            allDataLocal.append(ViewData(item[0].pk, item[0].name, ViewStatuses.Undone, item[1].dateTime, 0, item[0].timeout, item[0].comment))
+            allDataLocal.append(ViewData(itemPK, itemName, ViewStatuses.Undone))
         else:
-          allDataLocal.append(ViewData(item[0].pk, item[0].name, item[1].status.name, item[1].dateTime, item[1].elapsedTime, item[0].timeout, item[0].comment))
+          allDataLocal.append(ViewData(itemPK, itemName, ffStatus.name))
     return allDataLocal
 
   @orm.db_session
