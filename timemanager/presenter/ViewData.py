@@ -33,3 +33,6 @@ class ViewData():
 
   def done(self):
     return self.status == ViewStatuses.Done
+
+  def outdated(self):
+    return self.status == ViewStatuses.Outdated

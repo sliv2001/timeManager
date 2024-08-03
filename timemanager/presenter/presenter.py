@@ -1,4 +1,4 @@
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from pony import orm
 from timemanager.model.model import Fulfill, Items, Statuses
 from .ViewData import ViewData
@@ -55,14 +55,21 @@ class Presenter:
     allData = orm.left_join((item, ff) for item in Items for ff in item.fulfil
                             if item.status.name == ModelStatuses.Active and
                               ((ff.dateTime == max(ff.dateTime for ff in item.fulfil)) or ff is None)).order_by(1)
+
     allDataLocal = []
+    currentDateTime = datetime.now()
     for item in allData[:]:
       if item[1] is None:
         allDataLocal.append(ViewData(item[0].pk, item[0].name, ViewStatuses.Undone, dateTime, 0, item[0].timeout, item[0].comment))
-      elif item[1].dateTime < dateTime:
-        allDataLocal.append(ViewData(item[0].pk, item[0].name, ViewStatuses.Undone, item[1].dateTime, 0, item[0].timeout, item[0].comment))
       else:
-        allDataLocal.append(ViewData(item[0].pk, item[0].name, item[1].status.name, item[1].dateTime, item[1].elapsedTime, item[0].timeout, item[0].comment))
+        itemDt = item[1].dateTime
+        if itemDt < dateTime:
+          if item[1].dateTime.date() < (currentDateTime-timedelta(seconds=item[0].timeout)).date():
+            allDataLocal.append(ViewData(item[0].pk, item[0].name, ViewStatuses.Outdated, item[1].dateTime, 0, item[0].timeout, item[0].comment))
+          else:
+            allDataLocal.append(ViewData(item[0].pk, item[0].name, ViewStatuses.Undone, item[1].dateTime, 0, item[0].timeout, item[0].comment))
+        else:
+          allDataLocal.append(ViewData(item[0].pk, item[0].name, item[1].status.name, item[1].dateTime, item[1].elapsedTime, item[0].timeout, item[0].comment))
     return allDataLocal
 
   @orm.db_session

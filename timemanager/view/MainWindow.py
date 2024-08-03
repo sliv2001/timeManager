@@ -81,7 +81,7 @@ class MainWindow(QMainWindow):
     line = ListItem(item.itemName, item.itemPK)
     line.setFlags(line.flags() | Qt.ItemFlag.ItemIsUserCheckable)
     line.setCheckState(Qt.CheckState.Checked if item.done() else Qt.CheckState.Unchecked)
-    if item.dateTime.date() < (datetime.now()-timedelta(seconds=item.timeout)).date():
+    if item.outdated():
       line.setBackground(QColor("Red"))
     self.ui.listWidget.addItem(line)
 
