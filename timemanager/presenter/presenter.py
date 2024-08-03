@@ -104,10 +104,6 @@ class Presenter:
     self._removeItems(itemPKs)
     self._updateView()
 
-  def SetStatus(self, itemPK, statusLine, elapsedTime = 15*60, dateTime = datetime.now()):
-    self._addFulfill(itemPK, statusLine, elapsedTime, dateTime)
-    self._updateView()
-
   def SetItemDone(self, itemPK: int, status: bool, elapsedTime: int = 15*60, dateTime: datetime = datetime.now()):
     self._setItemDone(itemPK, status, elapsedTime, dateTime)
 
