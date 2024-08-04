@@ -21,7 +21,7 @@ class Presenter:
       pass
 
   @orm.db_session
-  def _addFulfill(self, item, statusLine, elapsedTime, dateTime = datetime.now()):
+  def _addFulfill(self, item, statusLine, elapsedTime, dateTime):
     itemEntry = Items[item]
     statusEntry = Statuses.get(name=statusLine)
     fulfill = Fulfill(dateTime=dateTime, item=itemEntry, status=statusEntry, elapsedTime=elapsedTime)
@@ -111,7 +111,7 @@ class Presenter:
     self._removeItems(itemPKs)
     self._updateView()
 
-  def SetItemDone(self, itemPK: int, status: bool, elapsedTime: int = 15*60, dateTime: datetime = datetime.now()):
+  def SetItemDone(self, itemPK: int, status: bool, elapsedTime, dateTime: datetime):
     self._setItemDone(itemPK, status, elapsedTime, dateTime)
 
   @orm.db_session
