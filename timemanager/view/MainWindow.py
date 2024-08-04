@@ -52,8 +52,7 @@ class MainWindow(QMainWindow):
 
   @Slot()
   def item_checked(self, item: ListItem):
-    if item.checkState():
-      self.presenter.SetItemDone(itemPK=item.itemPK, status=True, elapsedTime=15*60, dateTime=datetime.now())
+    self.presenter.SetItemDone(itemPK=item.itemPK, status= item.checkState() == Qt.CheckState.Checked, elapsedTime=15*60, dateTime=datetime.now())
 
   @Slot()
   def itemSelectionChanged(self):
@@ -69,11 +68,10 @@ class MainWindow(QMainWindow):
       raise RuntimeError('Delete triggered for empty range of objects!')
 
   @Slot()
-  def checkTriggered(self):
+  def checkTriggered(self, checked):
     currentItems = self.ui.listWidget.selectedItems()
     if len(currentItems) == 1:
-      currentItem = currentItems[0]
-      self.presenter.SetItemDone(currentItem.itemPK, currentItem.checkState() != Qt.CheckState.Checked)
+      self.presenter.SetItemDone(currentItems[0].itemPK, checked, elapsedTime=15*60, dateTime=datetime.now())
 
   ####### UI Updating facilities
 
@@ -97,9 +95,13 @@ class MainWindow(QMainWindow):
     self.enableItemEditActions()
 
   def enableItemEditActions(self):
-    enable = len(self.ui.listWidget.selectedItems()) > 0
+    currentItems = self.ui.listWidget.selectedItems()
+    lenCI = len(currentItems)
+    enable = lenCI > 0
     self.ui.removeItem.setEnabled(enable)
     self.ui.verboseItem.setEnabled(enable)
+    self.ui.checkItem.setEnabled(lenCI == 1)
+    self.ui.checkItem.setChecked(lenCI == 1 and currentItems[0].checkState() == Qt.CheckState.Checked)
 
   def createNewItem(self):
     newItem, res = QInputDialog.getText(self, 'Новый пункт', 'Название нового пункта: ')
