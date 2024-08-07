@@ -4,7 +4,7 @@ from .Statuses import ViewStatuses
 
 class ViewData():
 
-  def __init__(self, itemPK, itemName = None, status = None, dateTime = None, elapsedTime = None, timeout = None, comment = None) -> None:
+  def __init__(self, itemPK, itemName = None, status = None, dateTime = None, elapsedTime = None, timeout = None, comment = None, priority = None) -> None:
     self.itemName = itemName
     self.itemPK = itemPK
     self.timeout = timeout
@@ -12,6 +12,7 @@ class ViewData():
     self.dateTime = dateTime
     self.elapsedTime = elapsedTime
     self.comment = comment
+    self.priority = priority
 
   @classmethod
   @orm.db_session
@@ -26,10 +27,11 @@ class ViewData():
       comment = item.comment
       dateTime = None
       elapsedTime = None
+      priority = item.priority
     if fulfill is not None:
       dateTime = fulfill.dateTime
       elapsedTime = fulfill.elapsedTime
-    return cls(itemPK, itemName, status, dateTime, elapsedTime, timeout, comment)
+    return cls(itemPK, itemName, status, dateTime, elapsedTime, timeout, comment, priority)
 
   def done(self):
     return self.status == ViewStatuses.Done

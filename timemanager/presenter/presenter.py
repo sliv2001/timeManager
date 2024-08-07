@@ -27,9 +27,12 @@ class Presenter:
     fulfill = Fulfill(dateTime=dateTime, item=itemEntry, status=statusEntry, elapsedTime=elapsedTime)
 
   @orm.db_session
-  def _addItem(self, itemName, statusLine):
+  def _addItem(self, itemName, statusLine, priority):
+    statusLine = statusLine if not statusLine is None else ModelStatuses.Active
+    # Important: 0 is highest priority
+    priority = priority if not priority is None else self._getLowestPriority()
     statusEntry = Statuses.get(name=statusLine)
-    itemEntry = Items(name=itemName, status=statusEntry)
+    itemEntry = Items(name=itemName, status=statusEntry, priority = priority)
     return itemEntry.pk
 
   @orm.db_session
@@ -40,8 +43,8 @@ class Presenter:
   def _updateView(self):
     self.view.update()
 
-  def AddItem(self, itemName, statusLine = ModelStatuses.Active):
-    pk = self._addItem(itemName, statusLine)
+  def AddItem(self, item: ViewData):
+    pk = self._addItem(item.itemName, item.status, item.priority)
     self._updateView()
     return pk
 
@@ -80,6 +83,10 @@ class Presenter:
       return ViewStatuses.Undone
     else:
       return data[:][1].status.name
+
+  @orm.db_session
+  def _getLowestPriority(self) -> int:
+    ...
 
   @orm.db_session
   def getDataSinceToday(self):

@@ -104,6 +104,6 @@ class MainWindow(QMainWindow):
     self.ui.checkItem.setChecked(lenCI == 1 and currentItems[0].checkState() == Qt.CheckState.Checked)
 
   def createNewItem(self):
-    newItem, res = QInputDialog.getText(self, 'Новый пункт', 'Название нового пункта: ')
-    if res and len(newItem) > 0:
-      self.presenter.AddItem(newItem)
+    newItemName, res = QInputDialog.getText(self, 'Новый пункт', 'Название нового пункта: ')
+    if res and len(newItemName) > 0:
+      self.presenter.AddItem(ViewData(itemPK=None, itemName=newItemName))
