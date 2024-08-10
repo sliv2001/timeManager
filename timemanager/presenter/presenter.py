@@ -30,7 +30,7 @@ class Presenter:
   def _addItem(self, itemName, statusLine, priority):
     statusLine = statusLine if not statusLine is None else ModelStatuses.Active
     # Important: 0 is highest priority
-    priority = priority if not priority is None else self._getLowestPriority()
+    priority = priority if not priority is None else self._getLowestPriority() + 1
     statusEntry = Statuses.get(name=statusLine)
     itemEntry = Items(name=itemName, status=statusEntry, priority = priority)
     return itemEntry.pk
@@ -55,13 +55,14 @@ class Presenter:
     #   - It either has maximum time among fulfillments of current item,
     #     or has never been mentioned
     # These requests are then sorted by pk and chosen only those with todays fulfillment date
-    allData = orm.left_join((item.pk, item.name, item.timeout, ff.pk, ff.dateTime, ff.status) for item in Items for ff in item.fulfil
+    allData = orm.left_join((item.pk, item.name, item.timeout, ff.pk, ff.dateTime, ff.status, item.priority)
+                            for item in Items for ff in item.fulfil
                             if item.status.name == ModelStatuses.Active and
-                              ((ff.dateTime == max(ff.dateTime for ff in item.fulfil)) or ff is None)).order_by(1)
+                              ((ff.dateTime == max(ff.dateTime for ff in item.fulfil)) or ff is None)).order_by(7)
 
     allDataLocal = []
     currentDateTime = datetime.now()
-    for itemPK, itemName, itemTimeout, ffPk, ffDateTime, ffStatus in allData[:]:
+    for itemPK, itemName, itemTimeout, ffPk, ffDateTime, ffStatus, itemPriority in allData[:]:
       if ffPk is None:
         allDataLocal.append(ViewData(itemPK, itemName, ViewStatuses.Undone))
       else:
@@ -86,7 +87,8 @@ class Presenter:
 
   @orm.db_session
   def _getLowestPriority(self) -> int:
-    ...
+    leastPriority = orm.max(item.priority for item in Items)
+    return leastPriority if not leastPriority is None else 0
 
   @orm.db_session
   def getDataSinceToday(self):
