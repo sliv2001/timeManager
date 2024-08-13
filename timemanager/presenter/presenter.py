@@ -3,11 +3,14 @@ from pony import orm
 from timemanager.model.model import Fulfill, Items, Statuses
 from .ViewData import ViewData
 from .Statuses import ModelStatuses, ViewStatuses, ModelFulfillments, AllModelNames
+from .PriorityHandler import PriorityHandler
 
 class Presenter:
+
   def __init__(self, view) -> None:
     self.initDatabase()
     self.view = view
+    self.priorityHandler = PriorityHandler()
 
   def initDatabase(self):
     self.initStatuses()
@@ -27,12 +30,11 @@ class Presenter:
     fulfill = Fulfill(dateTime=dateTime, item=itemEntry, status=statusEntry, elapsedTime=elapsedTime)
 
   @orm.db_session
-  def _addItem(self, itemName, statusLine, priority):
+  def _addItem(self, itemName, statusLine, prevItemPK):
     statusLine = statusLine if not statusLine is None else ModelStatuses.Active
-    # Important: 0 is highest priority
-    priority = priority if not priority is None else self._getLowestPriority() + 1
+    priority = self.priorityHandler.GetNewItemPriority(prevItem=prevItemPK)
     statusEntry = Statuses.get(name=statusLine)
-    itemEntry = Items(name=itemName, status=statusEntry, priority = priority)
+    itemEntry = Items(name=itemName, status=statusEntry, priority=priority)
     return itemEntry.pk
 
   @orm.db_session
@@ -43,8 +45,8 @@ class Presenter:
   def _updateView(self):
     self.view.update()
 
-  def AddItem(self, item: ViewData):
-    pk = self._addItem(item.itemName, item.status, item.priority)
+  def AddItem(self, item: ViewData, prevItemPK = None):
+    pk = self._addItem(item.itemName, item.status, prevItemPK=prevItemPK)
     self._updateView()
     return pk
 
@@ -86,11 +88,6 @@ class Presenter:
       return data[:][1].status.name
 
   @orm.db_session
-  def _getLowestPriority(self) -> int:
-    leastPriority = orm.max(item.priority for item in Items)
-    return leastPriority if not leastPriority is None else 0
-
-  @orm.db_session
   def getDataSinceToday(self):
     today_night = datetime.combine(date.today(), datetime.min.time())
     return self.getDataSince(today_night)
@@ -101,6 +98,8 @@ class Presenter:
 
   @orm.db_session
   def _updateItem(self, item: ViewData):
+    if item.itemPK is None:
+      raise RuntimeError('Expected non-None item to update!')
     itemEntry = Items[item.itemPK]
     if item.comment is not None:
       itemEntry.comment = item.comment
@@ -134,6 +133,9 @@ class Presenter:
 
   def GetItem(self, itemPK):
     return self._getItem(itemPK)
+
+  def SetItemAfter(self, itemPK, afterItemPK):
+    return self.priorityHandler.SetAfter(itemPK, afterItemPK)
 
   def UpdateItem(self, item: ViewData):
     self._updateItem(item)
