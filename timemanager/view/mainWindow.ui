@@ -198,6 +198,40 @@
     <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
+  <action name="upItem">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::GoUp"/>
+   </property>
+   <property name="text">
+    <string>Поднять вверх</string>
+   </property>
+   <property name="toolTip">
+    <string>Поднять элемент вверх по приоритету</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+Num+Up</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="downItem">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::GoDown"/>
+   </property>
+   <property name="text">
+    <string>Опустить вниз</string>
+   </property>
+   <property name="toolTip">
+    <string>Опустить элемент вниз</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+Num+Down</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections>
