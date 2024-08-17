@@ -22,12 +22,12 @@ class PriorityHandler:
         if afterPriority == None: # This is the only item
           priority = 0
         else:
-          priority = afterPriority / 2
+          priority = afterPriority // 2
       else:
         if afterPriority == None: # This is last item
           priority = beforePriority + self.priorityStep
         else:
-          priority = (beforePriority + afterPriority) / 2
+          priority = (beforePriority + afterPriority) // 2
     else:
       priority = self._getLowestPriority() + self.priorityStep
     return priority
