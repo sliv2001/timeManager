@@ -135,7 +135,10 @@ class Presenter:
     return self._getItem(itemPK)
 
   def SetItemAfter(self, itemPK, afterItemPK):
-    return self.priorityHandler.SetAfter(itemPK, afterItemPK)
+    result = self.priorityHandler.SetAfter(itemPK, afterItemPK)
+    self._updateView()
+    return result
 
   def UpdateItem(self, item: ViewData):
     self._updateItem(item)
+    self._updateView()
