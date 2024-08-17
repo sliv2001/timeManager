@@ -32,12 +32,16 @@ class MainWindow(QMainWindow):
     self.ui.addItem.triggered.connect(slot=self.addTriggered)
     self.ui.verboseItem.triggered.connect(slot=self.verboseView.show)
     self.ui.checkItem.triggered.connect(slot=self.checkTriggered)
+    self.ui.upItem.triggered.connect(slot=self.upItemTriggered)
+    self.ui.downItem.triggered.connect(slot=self.downItemTriggered)
     self.ui.listWidget.itemChanged.connect(slot=self.item_checked)
     self.ui.listWidget.itemSelectionChanged.connect(slot=self.itemSelectionChanged)
     self.ui.listWidget.addAction(self.ui.addItem)
     self.ui.listWidget.addAction(self.ui.removeItem)
     self.ui.listWidget.addAction(self.ui.verboseItem)
     self.ui.listWidget.addAction(self.ui.checkItem)
+    self.ui.listWidget.addAction(self.ui.upItem)
+    self.ui.listWidget.addAction(self.ui.downItem)
     self.update()
 
 ####### Events handling slots
@@ -73,6 +77,14 @@ class MainWindow(QMainWindow):
     if len(currentItems) == 1:
       self.presenter.SetItemDone(currentItems[0].itemPK, checked, elapsedTime=15*60, dateTime=datetime.now())
 
+  @Slot()
+  def upItemTriggered(self):
+    self.makePriorityStep(-1)
+
+  @Slot()
+  def downItemTriggered(self):
+    self.makePriorityStep(1)
+
   ####### UI Updating facilities
 
   def drawCheckbox(self, item):
@@ -107,3 +119,25 @@ class MainWindow(QMainWindow):
     newItemName, res = QInputDialog.getText(self, 'Новый пункт', 'Название нового пункта: ')
     if res and len(newItemName) > 0:
       self.presenter.AddItem(ViewData(itemPK=None, itemName=newItemName))
+
+####### Auxillary functions
+
+  def makePriorityStep(self, step):
+    currentItems = self.ui.listWidget.selectedItems()
+    currentItem = currentItems[0]
+
+    if len(currentItems) != 1:
+      raise RuntimeError('Priority change triggered for wrong range of objects!')
+
+    currentIndex = self.ui.listWidget.indexFromItem(currentItem).row()
+
+    if currentIndex + step < 0 or currentIndex + step > self.ui.listWidget.count():
+      raise RuntimeError('Priority change triggered for top priority object!')
+
+    # If we move to the top, we must put current item after one before previous,
+    # Otherwise, after one after following
+    newIndex = currentIndex + step - 1 if step < 0 else currentIndex + step
+    try:
+      self.presenter.SetItemAfter(currentItem.itemPK, self.ui.listWidget.item(newIndex).itemPK)
+    except AttributeError as e:
+      self.presenter.SetItemAfter(currentItem.itemPK, None)
