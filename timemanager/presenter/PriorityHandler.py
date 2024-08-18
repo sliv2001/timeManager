@@ -8,6 +8,11 @@ class PriorityHandler:
     self.priorityStep = 10000
 
   @orm.db_session
+  def _getHighestPriority(self) -> int:
+    highestPriority = orm.min(item.priority for item in Items)
+    return highestPriority if not highestPriority is None else 0
+
+  @orm.db_session
   def _getLowestPriority(self) -> int:
     leastPriority = orm.max(item.priority for item in Items)
     return leastPriority if not leastPriority is None else 0
@@ -29,7 +34,7 @@ class PriorityHandler:
         else:
           priority = (beforePriority + afterPriority) // 2
     else:
-      priority = self._getLowestPriority() + self.priorityStep
+      priority = self._getHighestPriority() // 2
     return priority
 
   @orm.db_session
@@ -47,7 +52,7 @@ class PriorityHandler:
     itemEntry.priority = self._calculateItemPriority(prevItem=afterItemPK)
 
   def GetNewItemPriority(self, prevItem):
-    return self._calculateItemPriority(prevItem)
+    return self._getLowestPriority() + self.priorityStep
 
   def SetAfter(self, itemPK, afterItemPK):
     self._updatePriority(itemPK, afterItemPK)
