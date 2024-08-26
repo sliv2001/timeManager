@@ -21,20 +21,13 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="1" column="0">
-     <widget class="QListWidget" name="listWidget">
-      <property name="contextMenuPolicy">
-       <enum>Qt::ContextMenuPolicy::ActionsContextMenu</enum>
+    <item row="3" column="0">
+     <widget class="QDialogButtonBox" name="buttonBox">
+      <property name="locale">
+       <locale language="Russian" country="Russia"/>
       </property>
-      <property name="selectionMode">
-       <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="0">
-     <widget class="QLabel" name="label">
-      <property name="text">
-       <string>Это список дел, которые нужно выполнить в течение дня:</string>
+      <property name="standardButtons">
+       <set>QDialogButtonBox::StandardButton::NoButton</set>
       </property>
      </widget>
     </item>
@@ -84,15 +77,15 @@
       </layout>
      </widget>
     </item>
-    <item row="3" column="0">
-     <widget class="QDialogButtonBox" name="buttonBox">
-      <property name="locale">
-       <locale language="Russian" country="Russia"/>
-      </property>
-      <property name="standardButtons">
-       <set>QDialogButtonBox::StandardButton::NoButton</set>
+    <item row="0" column="0">
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Это список дел, которые нужно выполнить в течение дня:</string>
       </property>
      </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QListView" name="listView"/>
     </item>
    </layout>
   </widget>
@@ -235,22 +228,6 @@
  </widget>
  <resources/>
  <connections>
-  <connection>
-   <sender>listWidget</sender>
-   <signal>itemDoubleClicked(QListWidgetItem*)</signal>
-   <receiver>verboseItem</receiver>
-   <slot>trigger()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>399</x>
-     <y>172</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>itemVerboseButtonBox</sender>
    <signal>rejected()</signal>
