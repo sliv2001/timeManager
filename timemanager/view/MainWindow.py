@@ -124,6 +124,10 @@ class MainWindow(QMainWindow):
     self.ui.verboseItem.setEnabled(enable)
     self.ui.checkItem.setEnabled(lenCI == 1)
     self.ui.checkItem.setChecked(lenCI == 1 and currentItems[0].checkState() == Qt.CheckState.Checked)
+    self.ui.upItem.setEnabled(lenCI == 1)
+    self.ui.downItem.setEnabled(lenCI == 1)
+    self.ui.buttonBox.buttons()[2].setEnabled(lenCI == 1)
+    self.ui.buttonBox.buttons()[3].setEnabled(lenCI == 1)
 
   def createNewItem(self):
     newItemName, res = QInputDialog.getText(self, 'Новый пункт', 'Название нового пункта: ')
