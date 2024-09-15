@@ -1,13 +1,18 @@
 from datetime import datetime, date, timedelta
 from pony import orm
+from PySide6.QtCore import QAbstractItemModel, QModelIndex
 from timemanager.model.model import Fulfill, Items, Statuses
 from .ViewData import ViewData
 from .Statuses import ModelStatuses, ViewStatuses, ModelFulfillments, AllModelNames
 from .PriorityHandler import PriorityHandler
 
-class Presenter:
+class Presenter(QAbstractItemModel):
+
+  _cache: list
+  _updatedCache: bool
 
   def __init__(self, view) -> None:
+    super().__init__(view)
     self.initDatabase()
     self.view = view
     self.priorityHandler = PriorityHandler()
@@ -142,3 +147,26 @@ class Presenter:
   def UpdateItem(self, item: ViewData):
     self._updateItem(item)
     self._updateView()
+
+  def _getCache(self):
+    if not self._updatedCache:
+      self._cache = self.getDataSinceToday()
+      self._updatedCache = True
+    return self._cache
+
+# ///////////////////////////////////////////////// Redefinition of model members ///////////////////////////////////////////////// #
+
+  def rowCount(self, parent=None):
+    return len(self.getDataSinceToday())
+
+  def columnCount(self, parent=None):
+    return len(1)
+
+  def parent(self, index):
+    return QModelIndex()
+
+  def rowCount(self, parent=None):
+    return len(self._getCache())
+
+  def columnCount(self, parent=None):
+    return 1 # List -> columnCount is constant 1
