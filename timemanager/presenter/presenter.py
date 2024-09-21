@@ -1,6 +1,7 @@
 from datetime import datetime, date, timedelta
+from typing import Any
 from pony import orm
-from PySide6.QtCore import QAbstractItemModel, QModelIndex
+from PySide6.QtCore import QAbstractItemModel, QModelIndex, QPersistentModelIndex, Qt
 from timemanager.model.model import Fulfill, Items, Statuses
 from .ViewData import ViewData
 from .Statuses import ModelStatuses, ViewStatuses, ModelFulfillments, AllModelNames
@@ -9,7 +10,7 @@ from .PriorityHandler import PriorityHandler
 class Presenter(QAbstractItemModel):
 
   _cache: list
-  _updatedCache: bool
+  _updatedCache: bool = False
 
   def __init__(self, view) -> None:
     super().__init__(view)
@@ -157,16 +158,23 @@ class Presenter(QAbstractItemModel):
 # ///////////////////////////////////////////////// Redefinition of model members ///////////////////////////////////////////////// #
 
   def rowCount(self, parent=None):
-    return len(self.getDataSinceToday())
-
-  def columnCount(self, parent=None):
-    return len(1)
-
-  def parent(self, index):
-    return QModelIndex()
-
-  def rowCount(self, parent=None):
     return len(self._getCache())
 
   def columnCount(self, parent=None):
     return 1 # List -> columnCount is constant 1
+
+  def parent(self, index):
+    return QModelIndex()
+
+  def index(self, row, column, parent = None):
+    if (column > 1):
+      return QModelIndex()
+    return self.createIndex(row, column, self._getCache()[row].itemPK)
+
+  def data(self, index: QModelIndex | QPersistentModelIndex, role: int = ...) -> Any:
+    # See this for roles description:
+    # https://doc.qt.io/qt-6/qt.html#ItemDataRole-enum
+    if role == Qt.ItemDataRole.DisplayRole:
+      return self._getCache()[index.row()].itemName
+    else:
+      return None
