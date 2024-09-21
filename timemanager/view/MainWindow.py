@@ -19,6 +19,7 @@ class MainWindow(QMainWindow):
     self.ui = Ui_MainWindow()
     self.ui.setupUi(self)
     self.presenter = Presenter(self)
+    self.ui.listView.setModel(self.presenter)
     self.verboseView = VerboseView(self.ui, self.presenter)
 
     closeButton = QPushButton(text="Закрыть", parent=self.ui.buttonBox)
@@ -44,14 +45,14 @@ class MainWindow(QMainWindow):
     self.ui.checkItem.triggered.connect(slot=self.checkTriggered)
     self.ui.upItem.triggered.connect(slot=self.upItemTriggered)
     self.ui.downItem.triggered.connect(slot=self.downItemTriggered)
-    self.ui.listWidget.itemChanged.connect(slot=self.item_checked)
-    self.ui.listWidget.itemSelectionChanged.connect(slot=self.itemSelectionChanged)
-    self.ui.listWidget.addAction(self.ui.addItem)
-    self.ui.listWidget.addAction(self.ui.removeItem)
-    self.ui.listWidget.addAction(self.ui.verboseItem)
-    self.ui.listWidget.addAction(self.ui.checkItem)
-    self.ui.listWidget.addAction(self.ui.upItem)
-    self.ui.listWidget.addAction(self.ui.downItem)
+    # self.ui.listView.itemChanged.connect(slot=self.item_checked)
+    # self.ui.listView.itemSelectionChanged.connect(slot=self.itemSelectionChanged)
+    self.ui.listView.addAction(self.ui.addItem)
+    self.ui.listView.addAction(self.ui.removeItem)
+    self.ui.listView.addAction(self.ui.verboseItem)
+    self.ui.listView.addAction(self.ui.checkItem)
+    self.ui.listView.addAction(self.ui.upItem)
+    self.ui.listView.addAction(self.ui.downItem)
     self.update()
 
 ####### Events handling slots
@@ -74,16 +75,16 @@ class MainWindow(QMainWindow):
 
   @Slot()
   def deleteTriggered(self):
-    currentItems = self.ui.listWidget.selectedItems()
+    currentItems = self.ui.listView.selectedItems()
     if len(currentItems) > 0:
-      self.presenter.RemoveItems([item.itemPK for item in self.ui.listWidget.selectedItems()])
+      self.presenter.RemoveItems([item.itemPK for item in self.ui.listView.selectedItems()])
 
     else:
       raise RuntimeError('Delete triggered for empty range of objects!')
 
   @Slot()
   def checkTriggered(self, checked):
-    currentItems = self.ui.listWidget.selectedItems()
+    currentItems = self.ui.listView.selectedItems()
     if len(currentItems) == 1:
       self.presenter.SetItemDone(currentItems[0].itemPK, checked, elapsedTime=15*60, dateTime=datetime.now())
 
@@ -103,21 +104,22 @@ class MainWindow(QMainWindow):
     line.setCheckState(Qt.CheckState.Checked if item.done() else Qt.CheckState.Unchecked)
     if item.outdated():
       line.setBackground(QColor("Red"))
-    self.ui.listWidget.addItem(line)
+    self.ui.listView.addItem(line)
 
   def drawCheckboxes(self):
-    if self.ui.listWidget.count() > 0:
-      self.ui.listWidget.clear()
+    if self.ui.listView.count() > 0:
+      self.ui.listView.clear()
     for item in self.todayData:
       self.drawCheckbox(item)
 
   def update(self):
-    self.todayData = self.presenter.getDataSinceToday()
-    self.drawCheckboxes()
-    self.enableItemEditActions()
+    # self.todayData = self.presenter.getDataSinceToday()
+    # self.drawCheckboxes()
+    # self.enableItemEditActions()
+    ...
 
   def enableItemEditActions(self):
-    currentItems = self.ui.listWidget.selectedItems()
+    currentItems = self.ui.listView.selectedItems()
     lenCI = len(currentItems)
     enable = lenCI > 0
     self.ui.removeItem.setEnabled(enable)
@@ -133,21 +135,21 @@ class MainWindow(QMainWindow):
 ####### Auxillary functions
 
   def makePriorityStep(self, step):
-    currentItems = self.ui.listWidget.selectedItems()
+    currentItems = self.ui.listView.selectedItems()
     currentItem = currentItems[0]
 
     if len(currentItems) != 1:
       raise RuntimeError('Priority change triggered for wrong range of objects!')
 
-    currentIndex = self.ui.listWidget.indexFromItem(currentItem).row()
+    currentIndex = self.ui.listView.indexFromItem(currentItem).row()
 
-    if currentIndex + step < 0 or currentIndex + step > self.ui.listWidget.count():
+    if currentIndex + step < 0 or currentIndex + step > self.ui.listView.count():
       raise RuntimeError('Priority change triggered for top priority object!')
 
     # If we move to the top, we must put current item after one before previous,
     # Otherwise, after one after following
     newIndex = currentIndex + step - 1 if step < 0 else currentIndex + step
     try:
-      self.presenter.SetItemAfter(currentItem.itemPK, self.ui.listWidget.item(newIndex).itemPK)
+      self.presenter.SetItemAfter(currentItem.itemPK, self.ui.listView.item(newIndex).itemPK)
     except AttributeError as e:
       self.presenter.SetItemAfter(currentItem.itemPK, None)
