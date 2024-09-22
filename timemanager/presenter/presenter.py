@@ -2,6 +2,7 @@ from datetime import datetime, date, timedelta
 from typing import Any
 from pony import orm
 from PySide6.QtCore import QAbstractItemModel, QModelIndex, QPersistentModelIndex, Qt
+from PySide6.QtGui import QColor
 from timemanager.model.model import Fulfill, Items, Statuses
 from .ViewData import ViewData
 from .Statuses import ModelStatuses, ViewStatuses, ModelFulfillments, AllModelNames
@@ -176,5 +177,15 @@ class Presenter(QAbstractItemModel):
     # https://doc.qt.io/qt-6/qt.html#ItemDataRole-enum
     if role == Qt.ItemDataRole.DisplayRole:
       return self._getCache()[index.row()].itemName
+    elif role == Qt.ItemDataRole.BackgroundRole:
+      if self._getCache()[index.row()].status == ViewStatuses.Outdated:
+        return QColor("Red")
+      else:
+        return None
+    elif role == Qt.ItemDataRole.CheckStateRole:
+      if self._getCache()[index.row()].status == ViewStatuses.Done:
+        return Qt.CheckState.Checked
+      else:
+        return Qt.CheckState.Unchecked
     else:
       return None
