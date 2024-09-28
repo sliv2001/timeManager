@@ -196,7 +196,9 @@ class Presenter(QAbstractItemModel):
     return Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEditable | Qt.ItemFlag.ItemIsUserCheckable | Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemNeverHasChildren
 
   def setData(self, index: QModelIndex | QPersistentModelIndex, value: Any, role: int = ...) -> bool:
-    if role == Qt.ItemDataRole.CheckStateRole and value != Qt.CheckState.PartiallyChecked:
-      self.UpdateItem(ViewData(index.internalId(), status=ViewStatuses.Done))
+    if role == Qt.ItemDataRole.CheckStateRole and value != Qt.CheckState.PartiallyChecked.value:
+      self.SetItemDone(index.internalId(), value == Qt.CheckState.Checked.value, 60*15, datetime.now())
+      self._updatedCache = False
+      self.dataChanged.emit(index, index, [role])
       return True
     return False
