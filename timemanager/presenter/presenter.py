@@ -49,8 +49,14 @@ class Presenter(QAbstractItemModel):
     for itemPK in itemPKs:
       self._updateItem(ViewData(itemPK, status=ModelStatuses.Removed))
 
-  def _updateView(self):
-    self.view.update()
+  def _updateView(self, topLeft = None, bottomRight = None, rolesList = None):
+    self._updatedCache = False
+    if topLeft is None:
+      topLeft = QAbstractItemModel.createIndex(0, 0, self._getCache()[0].itemPK)
+    if bottomRight is None:
+      lastIndex = self.rowCount()-1
+      bottomRight = QAbstractItemModel.createIndex(lastIndex, 0, self._getCache()[lastIndex].itemPK)
+    self.dataChanged.emit(topLeft, bottomRight, rolesList)
 
   def AddItem(self, item: ViewData, prevItemPK = None):
     pk = self._addItem(item.itemName, item.status, prevItemPK=prevItemPK)
