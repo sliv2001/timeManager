@@ -19,6 +19,8 @@ class Presenter(QAbstractItemModel):
     self.view = view
     self.priorityHandler = PriorityHandler()
 
+# ////////////////////////////////////////////////////// Model-side functions ///////////////////////////////////////////////////// #
+
   def initDatabase(self):
     self.initStatuses()
 
@@ -48,20 +50,6 @@ class Presenter(QAbstractItemModel):
   def _removeItems(self, itemPKs):
     for itemPK in itemPKs:
       self._updateItem(ViewData(itemPK, status=ModelStatuses.Removed))
-
-  def _updateView(self, topLeft = None, bottomRight = None, rolesList = None):
-    self._updatedCache = False
-    if topLeft is None:
-      topLeft = QAbstractItemModel.createIndex(0, 0, self._getCache()[0].itemPK)
-    if bottomRight is None:
-      lastIndex = self.rowCount()-1
-      bottomRight = QAbstractItemModel.createIndex(lastIndex, 0, self._getCache()[lastIndex].itemPK)
-    self.dataChanged.emit(topLeft, bottomRight, rolesList)
-
-  def AddItem(self, item: ViewData, prevItemPK = None):
-    pk = self._addItem(item.itemName, item.status, prevItemPK=prevItemPK)
-    self._updateView()
-    return pk
 
   @orm.db_session
   def getDataSince(self, dateTime):
@@ -123,6 +111,25 @@ class Presenter(QAbstractItemModel):
       itemEntry.status = statusEntry
     if item.timeout is not None:
       itemEntry.timeout = item.timeout
+
+
+# ////////////////////////////////////////////////////// View-side functions ////////////////////////////////////////////////////// #
+
+  def _updateView(self, topLeft = None, bottomRight = None, rolesList = None):
+    self._updatedCache = False
+    if topLeft is None:
+      topLeft = QAbstractItemModel.createIndex(0, 0, self._getCache()[0].itemPK)
+    if bottomRight is None:
+      lastIndex = self.rowCount()-1
+      bottomRight = QAbstractItemModel.createIndex(lastIndex, 0, self._getCache()[lastIndex].itemPK)
+    self.dataChanged.emit(topLeft, bottomRight, rolesList)
+
+  def AddItem(self, item: ViewData, prevItemPK = None):
+    self.beginInsertRows(QModelIndex(), self.rowCount(), self.rowCount()+1)
+    pk = self._addItem(item.itemName, item.status, prevItemPK=prevItemPK)
+    self._updatedCache = False
+    self.endInsertRows()
+    return pk
 
   def RemoveItem(self, itemPK):
     self._removeItems([itemPK])
