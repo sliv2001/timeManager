@@ -47,9 +47,12 @@ class Presenter(QAbstractItemModel):
     return itemEntry.pk
 
   @orm.db_session
-  def _removeItems(self, itemPKs):
-    for itemPK in itemPKs:
-      self._updateItem(ViewData(itemPK, status=ModelStatuses.Removed))
+  def _removeItems(self, items):
+    self.beginRemoveRows(QModelIndex(), items[0].itemIndex, items[-1].itemIndex)
+    self._updatedCache = False
+    for item in items:
+      self._updateItem(item)
+    self.endRemoveRows()
 
   @orm.db_session
   def getDataSince(self, dateTime):
@@ -107,7 +110,7 @@ class Presenter(QAbstractItemModel):
     if item.itemName is not None:
       itemEntry.name = item.itemName
     if item.status is not None:
-      statusEntry = Statuses.get(name=item.status)
+      statusEntry = Statuses.get(name=ViewStatuses.toModel(item.status))
       itemEntry.status = statusEntry
     if item.timeout is not None:
       itemEntry.timeout = item.timeout
@@ -118,7 +121,7 @@ class Presenter(QAbstractItemModel):
   def _updateView(self, topLeft = None, bottomRight = None, rolesList = None):
     self._updatedCache = False
     if topLeft is None:
-      topLeft = QAbstractItemModel.createIndex(0, 0, self._getCache()[0].itemPK)
+      topLeft = self.createIndex(0, 0, self._getCache()[0].itemPK)
     if bottomRight is None:
       lastIndex = self.rowCount()-1
       bottomRight = QAbstractItemModel.createIndex(lastIndex, 0, self._getCache()[lastIndex].itemPK)
@@ -131,13 +134,13 @@ class Presenter(QAbstractItemModel):
     self.endInsertRows()
     return pk
 
-  def RemoveItem(self, itemPK):
-    self._removeItems([itemPK])
-    self._updateView()
+  def RemoveItem(self, item: ViewData):
+    self._removeItems([item])
+    # self._updateView()
 
-  def RemoveItems(self, itemPKs):
-    self._removeItems(itemPKs)
-    self._updateView()
+  def RemoveItems(self, items: list[ViewData]):
+    self._removeItems(items)
+    # self._updateView()
 
   def SetItemDone(self, itemPK: int, status: bool, elapsedTime, dateTime: datetime):
     self._setItemDone(itemPK, status, elapsedTime, dateTime)
@@ -149,19 +152,19 @@ class Presenter(QAbstractItemModel):
     else:
       statusLine = self._getPreviousFulfillmentStatus(itemPK)
     self._addFulfill(itemPK, statusLine, elapsedTime, dateTime)
-    self._updateView()
+    # self._updateView()
 
   def GetItem(self, itemPK):
     return self._getItem(itemPK)
 
   def SetItemAfter(self, itemPK, afterItemPK):
     result = self.priorityHandler.SetAfter(itemPK, afterItemPK)
-    self._updateView()
+    # self._updateView()
     return result
 
   def UpdateItem(self, item: ViewData):
     self._updateItem(item)
-    self._updateView()
+    # self._updateView()
 
   def _getCache(self):
     if not self._updatedCache:

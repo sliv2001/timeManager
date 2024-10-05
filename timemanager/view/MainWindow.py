@@ -9,6 +9,7 @@ from timemanager.presenter.presenter import Presenter
 from timemanager.presenter.ViewData import ViewData
 from timemanager.view.listItem import ListItem
 from timemanager.view.VerboseView import VerboseView
+from timemanager.presenter.Statuses import ViewStatuses
 
 class MainWindow(QMainWindow):
 
@@ -75,9 +76,9 @@ class MainWindow(QMainWindow):
 
   @Slot()
   def deleteTriggered(self):
-    currentItems = self.ui.listView.selectedItems()
+    currentItems = self.ui.listView.selectedIndexes()
     if len(currentItems) > 0:
-      self.presenter.RemoveItems([item.itemPK for item in self.ui.listView.selectedItems()])
+      self.presenter.RemoveItems([ViewData(itemPK=itemIndex.internalId(), itemIndex=itemIndex.row(), status=ViewStatuses.Removed) for itemIndex in currentItems])
 
     else:
       raise RuntimeError('Delete triggered for empty range of objects!')

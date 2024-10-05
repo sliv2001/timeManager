@@ -4,9 +4,10 @@ from .Statuses import ViewStatuses
 
 class ViewData():
 
-  def __init__(self, itemPK, itemName = None, status = None, dateTime = None, elapsedTime = None, timeout = None, comment = None) -> None:
+  def __init__(self, itemPK, itemName = None, status = None, dateTime = None, elapsedTime = None, timeout = None, comment = None, itemIndex: int = None) -> None:
     self.itemName = itemName
     self.itemPK = itemPK
+    self.itemIndex = itemIndex
     self.timeout = timeout
     self.status = status
     self.dateTime = dateTime
@@ -21,6 +22,7 @@ class ViewData():
     if item is not None:
       itemName = item.name
       itemPK = item.pk
+      itemIndex = None
       timeout = item.timeout
       status = item.status.name
       comment = item.comment

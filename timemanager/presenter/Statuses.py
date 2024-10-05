@@ -51,5 +51,12 @@ class ViewStatuses:
   def AllViewStatuses():
     return {'DONE', 'UNDONE', 'PENDING', 'OUTDATED', 'REJECTED', 'REMOVED'}
 
+  @classmethod
+  def toModel(cls, name: str):
+    if name == cls.Rejected or name == cls.Removed:
+      return name
+    else:
+      return ModelStatuses.Active
+
 def AllModelNames():
   return ModelFulfillments.AllFulfillments() | ModelStatuses.AllStatuses()
