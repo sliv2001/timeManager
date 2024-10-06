@@ -102,6 +102,7 @@ class Presenter(QAbstractItemModel):
 
   @orm.db_session
   def _updateItem(self, item: ViewData):
+    self._updatedCache = False
     if item.itemPK is None:
       raise RuntimeError('Expected non-None item to update!')
     itemEntry = Items[item.itemPK]
@@ -110,11 +111,36 @@ class Presenter(QAbstractItemModel):
     if item.itemName is not None:
       itemEntry.name = item.itemName
     if item.status is not None:
-      statusEntry = Statuses.get(name=ViewStatuses.toModel(item.status))
-      itemEntry.status = statusEntry
+      self._updateStatus(item, itemEntry)
     if item.timeout is not None:
       itemEntry.timeout = item.timeout
 
+  @orm.db_session
+  def _updateStatus(self, item, itemEntry):
+    if item.status == ViewStatuses.Done:
+      fulfillLine = ModelFulfillments.Done
+      self._addFulfill(item.itemPK, fulfillLine, item.elapsedTime, item.dateTime)
+    elif item.status == ViewStatuses.Undone:
+      fulfillLine = self._getPreviousFulfillmentStatus(item.itemPK)
+      self._addFulfill(item.itemPK, fulfillLine, item.elapsedTime, item.dateTime)
+    elif item.status == ViewStatuses.Pending:
+      raise RuntimeError('Currently Pending is not supported')
+    else:
+      statusName = ViewStatuses.toModel(item.status)
+      if statusName == ModelStatuses.Removed:
+        self.beginRemoveRows(QModelIndex(), item.itemIndex, item.itemIndex)
+        statusEntry = Statuses.get(name=statusName)
+        itemEntry.status = statusEntry
+        self.endRemoveRows()
+        self._updatedCache = False
+      else:
+        statusEntry = Statuses.get(name=statusName)
+        itemEntry.status = statusEntry
+
+  @orm.db_session
+  def _updateItems(self, items: list[ViewData]):
+    for item in items:
+      self._updateItem(item)
 
 # ////////////////////////////////////////////////////// View-side functions ////////////////////////////////////////////////////// #
 
@@ -165,6 +191,9 @@ class Presenter(QAbstractItemModel):
   def UpdateItem(self, item: ViewData):
     self._updateItem(item)
     # self._updateView()
+
+  def UpdateItems(self, items: list[ViewData]):
+    self._updateItems(items)
 
   def _getCache(self):
     if not self._updatedCache:
