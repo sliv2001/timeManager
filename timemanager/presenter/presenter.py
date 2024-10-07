@@ -47,14 +47,6 @@ class Presenter(QAbstractItemModel):
     return itemEntry.pk
 
   @orm.db_session
-  def _removeItems(self, items):
-    self.beginRemoveRows(QModelIndex(), items[0].itemIndex, items[-1].itemIndex)
-    self._updatedCache = False
-    for item in items:
-      self._updateItem(item)
-    self.endRemoveRows()
-
-  @orm.db_session
   def getDataSince(self, dateTime):
     # Select all the fulfillments, which have following properties:
     #   - Its parent item is active
@@ -117,12 +109,8 @@ class Presenter(QAbstractItemModel):
 
   @orm.db_session
   def _updateStatus(self, item, itemEntry):
-    if item.status == ViewStatuses.Done:
-      fulfillLine = ModelFulfillments.Done
-      self._addFulfill(item.itemPK, fulfillLine, item.elapsedTime, item.dateTime)
-    elif item.status == ViewStatuses.Undone:
-      fulfillLine = self._getPreviousFulfillmentStatus(item.itemPK)
-      self._addFulfill(item.itemPK, fulfillLine, item.elapsedTime, item.dateTime)
+    if item.status == ViewStatuses.Done or item.status == ViewStatuses.Undone:
+      self._setItemDone(item.itemPK, item.status, item.elapsedTime, item.dateTime)
     elif item.status == ViewStatuses.Pending:
       raise RuntimeError('Currently Pending is not supported')
     else:
@@ -138,9 +126,24 @@ class Presenter(QAbstractItemModel):
         itemEntry.status = statusEntry
 
   @orm.db_session
+  def _setItemDone(self, itemPK, status, elapsedTime, dateTime):
+    if status == ViewStatuses.Done:
+      fulfillLine = ModelFulfillments.Done
+      self._addFulfill(itemPK, fulfillLine, elapsedTime, dateTime)
+    else:
+      fulfillLine = self._getPreviousFulfillmentStatus(itemPK)
+      self._addFulfill(itemPK, fulfillLine, elapsedTime, dateTime)
+
+  @orm.db_session
   def _updateItems(self, items: list[ViewData]):
     for item in items:
       self._updateItem(item)
+
+  def _getCache(self):
+    if not self._updatedCache:
+      self._cache = self.getDataSinceToday()
+      self._updatedCache = True
+    return self._cache
 
 # ////////////////////////////////////////////////////// View-side functions ////////////////////////////////////////////////////// #
 
@@ -160,26 +163,6 @@ class Presenter(QAbstractItemModel):
     self.endInsertRows()
     return pk
 
-  def RemoveItem(self, item: ViewData):
-    self._removeItems([item])
-    # self._updateView()
-
-  def RemoveItems(self, items: list[ViewData]):
-    self._removeItems(items)
-    # self._updateView()
-
-  def SetItemDone(self, itemPK: int, status: bool, elapsedTime, dateTime: datetime):
-    self._setItemDone(itemPK, status, elapsedTime, dateTime)
-
-  @orm.db_session
-  def _setItemDone(self, itemPK, status, elapsedTime, dateTime):
-    if status:
-      statusLine = ModelFulfillments.Done
-    else:
-      statusLine = self._getPreviousFulfillmentStatus(itemPK)
-    self._addFulfill(itemPK, statusLine, elapsedTime, dateTime)
-    # self._updateView()
-
   def GetItem(self, itemPK):
     return self._getItem(itemPK)
 
@@ -194,12 +177,6 @@ class Presenter(QAbstractItemModel):
 
   def UpdateItems(self, items: list[ViewData]):
     self._updateItems(items)
-
-  def _getCache(self):
-    if not self._updatedCache:
-      self._cache = self.getDataSinceToday()
-      self._updatedCache = True
-    return self._cache
 
 # ///////////////////////////////////////////////// Redefinition of model members ///////////////////////////////////////////////// #
 
