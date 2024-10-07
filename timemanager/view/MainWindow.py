@@ -68,7 +68,8 @@ class MainWindow(QMainWindow):
 
   @Slot()
   def item_checked(self, item: ListItem):
-    self.presenter.SetItemDone(itemPK=item.itemPK, status= item.checkState() == Qt.CheckState.Checked, elapsedTime=15*60, dateTime=datetime.now())
+    # self.presenter.SetItemDone(itemPK=item.itemPK, status= item.checkState() == Qt.CheckState.Checked, elapsedTime=15*60, dateTime=datetime.now())
+    ...
 
   @Slot()
   def itemSelectionChanged(self):
