@@ -54,7 +54,6 @@ class MainWindow(QMainWindow):
     self.ui.listView.addAction(self.ui.checkItem)
     self.ui.listView.addAction(self.ui.upItem)
     self.ui.listView.addAction(self.ui.downItem)
-    self.update()
 
 ####### Events handling slots
 
@@ -65,15 +64,6 @@ class MainWindow(QMainWindow):
   @Slot()
   def addTriggered(self, button: QAbstractButton):
     self.createNewItem()
-
-  @Slot()
-  def item_checked(self, item: ListItem):
-    # self.presenter.SetItemDone(itemPK=item.itemPK, status= item.checkState() == Qt.CheckState.Checked, elapsedTime=15*60, dateTime=datetime.now())
-    ...
-
-  @Slot()
-  def itemSelectionChanged(self):
-    self.enableItemEditActions()
 
   @Slot()
   def deleteTriggered(self):
@@ -101,26 +91,6 @@ class MainWindow(QMainWindow):
     self.makePriorityStep(1)
 
   ####### UI Updating facilities
-
-  def drawCheckbox(self, item):
-    line = ListItem(item.itemName, item.itemPK)
-    line.setFlags(line.flags() | Qt.ItemFlag.ItemIsUserCheckable)
-    line.setCheckState(Qt.CheckState.Checked if item.done() else Qt.CheckState.Unchecked)
-    if item.outdated():
-      line.setBackground(QColor("Red"))
-    self.ui.listView.addItem(line)
-
-  def drawCheckboxes(self):
-    if self.ui.listView.count() > 0:
-      self.ui.listView.clear()
-    for item in self.todayData:
-      self.drawCheckbox(item)
-
-  def update(self):
-    # self.todayData = self.presenter.getDataSinceToday()
-    # self.drawCheckboxes()
-    # self.enableItemEditActions()
-    ...
 
   def enableItemEditActions(self):
     currentItems = self.ui.listView.selectedItems()
