@@ -215,7 +215,7 @@ class Presenter(QAbstractItemModel):
   def flags(self, index: QModelIndex | QPersistentModelIndex) -> Qt.ItemFlag:
     # See this for item flags description:
     # https://doc.qt.io/qt-6/qt.html#ItemFlag-enum
-    return Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEditable | Qt.ItemFlag.ItemIsUserCheckable | Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemNeverHasChildren
+    return Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsUserCheckable | Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemNeverHasChildren
 
   def setData(self, index: QModelIndex | QPersistentModelIndex, value: Any, role: int = ...) -> bool:
     if role == Qt.ItemDataRole.CheckStateRole and value != Qt.CheckState.PartiallyChecked.value:
