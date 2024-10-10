@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from PySide6.QtCore import Qt, Slot
+from PySide6.QtCore import Qt, Slot, QModelIndex
 from PySide6.QtWidgets import QMainWindow, QWidget, QAbstractButton, QPushButton, QDialogButtonBox, QInputDialog
 from PySide6.QtGui import QColor
 
@@ -109,21 +109,21 @@ class MainWindow(QMainWindow):
 ####### Auxillary functions
 
   def makePriorityStep(self, step):
-    currentItems = self.ui.listView.selectedItems()
+    currentItems = self.ui.listView.selectedIndexes()
     currentItem = currentItems[0]
 
     if len(currentItems) != 1:
       raise RuntimeError('Priority change triggered for wrong range of objects!')
 
-    currentIndex = self.ui.listView.indexFromItem(currentItem).row()
+    currentIndex = currentItem.row()
 
-    if currentIndex + step < 0 or currentIndex + step > self.ui.listView.count():
+    if currentIndex + step < 0 or currentIndex + step > self.presenter.rowCount():
       raise RuntimeError('Priority change triggered for top priority object!')
 
     # If we move to the top, we must put current item after one before previous,
     # Otherwise, after one after following
     newIndex = currentIndex + step - 1 if step < 0 else currentIndex + step
     try:
-      self.presenter.SetItemAfter(currentItem.itemPK, self.ui.listView.item(newIndex).itemPK)
+      self.presenter.SetItemAfter(currentItem, self.presenter.index(newIndex, 0, QModelIndex()))
     except AttributeError as e:
       self.presenter.SetItemAfter(currentItem.itemPK, None)

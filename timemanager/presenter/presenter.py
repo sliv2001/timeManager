@@ -166,8 +166,11 @@ class Presenter(QAbstractItemModel):
   def GetItem(self, itemPK):
     return self._getItem(itemPK)
 
-  def SetItemAfter(self, itemPK, afterItemPK):
-    result = self.priorityHandler.SetAfter(itemPK, afterItemPK)
+  def SetItemAfter(self, item: QModelIndex, afterItem: QModelIndex):
+    self.beginMoveRows(QModelIndex(), item.row(), item.row(), QModelIndex(), afterItem.row()+1)
+    result = self.priorityHandler.SetAfter(item.internalId(), afterItem.internalId())
+    self._updatedCache = False
+    self.endMoveRows()
     # self._updateView()
     return result
 
