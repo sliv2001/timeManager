@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'mainWindowoBecYq.ui'
+## Form generated from reading UI file 'mainWindowxdqvld.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -16,10 +16,11 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QIcon, QImage, QKeySequence, QLinearGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
-from PySide6.QtWidgets import (QAbstractButton, QApplication, QDialogButtonBox, QGridLayout,
-    QGroupBox, QLabel, QListView, QMainWindow,
-    QMenuBar, QPlainTextEdit, QSizePolicy, QStatusBar,
-    QTabWidget, QTextEdit, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QAbstractButton, QAbstractItemView, QApplication, QDialogButtonBox,
+    QGridLayout, QGroupBox, QLabel, QListView,
+    QMainWindow, QMenuBar, QPlainTextEdit, QSizePolicy,
+    QStatusBar, QTabWidget, QTextEdit, QVBoxLayout,
+    QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -122,6 +123,7 @@ class Ui_MainWindow(object):
 
         self.listView = QListView(self.centralwidget)
         self.listView.setObjectName(u"listView")
+        self.listView.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
 
         self.gridLayout.addWidget(self.listView, 1, 0, 1, 1)
 
