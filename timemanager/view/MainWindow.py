@@ -47,13 +47,15 @@ class MainWindow(QMainWindow):
     self.ui.upItem.triggered.connect(slot=self.upItemTriggered)
     self.ui.downItem.triggered.connect(slot=self.downItemTriggered)
     # self.ui.listView.itemChanged.connect(slot=self.item_checked)
-    # self.ui.listView.itemSelectionChanged.connect(slot=self.itemSelectionChanged)
+    self.ui.listView.selectionModel().selectionChanged.connect(slot=self.itemSelectionChanged)
     self.ui.listView.addAction(self.ui.addItem)
     self.ui.listView.addAction(self.ui.removeItem)
     self.ui.listView.addAction(self.ui.verboseItem)
     self.ui.listView.addAction(self.ui.checkItem)
     self.ui.listView.addAction(self.ui.upItem)
     self.ui.listView.addAction(self.ui.downItem)
+
+    self.enableItemEditActions()
 
 ####### Events handling slots
 
@@ -64,6 +66,10 @@ class MainWindow(QMainWindow):
   @Slot()
   def addTriggered(self, button: QAbstractButton):
     self.createNewItem()
+
+  @Slot()
+  def itemSelectionChanged(self):
+    self.enableItemEditActions()
 
   @Slot()
   def deleteTriggered(self):
@@ -93,13 +99,15 @@ class MainWindow(QMainWindow):
   ####### UI Updating facilities
 
   def enableItemEditActions(self):
-    currentItems = self.ui.listView.selectedItems()
+    currentItems = self.ui.listView.selectedIndexes()
     lenCI = len(currentItems)
     enable = lenCI > 0
     self.ui.removeItem.setEnabled(enable)
     self.ui.verboseItem.setEnabled(enable)
     self.ui.checkItem.setEnabled(lenCI == 1)
-    self.ui.checkItem.setChecked(lenCI == 1 and currentItems[0].checkState() == Qt.CheckState.Checked)
+    self.ui.checkItem.setChecked(lenCI == 1 and currentItems[0].data(role=Qt.ItemDataRole.CheckStateRole) == Qt.CheckState.Checked)
+    self.ui.buttonBox.buttons()[2].setEnabled(lenCI == 1)
+    self.ui.buttonBox.buttons()[3].setEnabled(lenCI == 1)
 
   def createNewItem(self):
     newItemName, res = QInputDialog.getText(self, 'Новый пункт', 'Название нового пункта: ')
