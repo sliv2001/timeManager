@@ -45,6 +45,7 @@ class MainWindow(QMainWindow):
     self.ui.checkItem.triggered.connect(slot=self.checkTriggered)
     self.ui.upItem.triggered.connect(slot=self.upItemTriggered)
     self.ui.downItem.triggered.connect(slot=self.downItemTriggered)
+    self.ui.verboseItem.triggered.connect(slot=self.verboseView.show)
     self.ui.listView.selectionModel().selectionChanged.connect(slot=self.itemSelectionChanged)
     self.ui.listView.addAction(self.ui.addItem)
     self.ui.listView.addAction(self.ui.removeItem)

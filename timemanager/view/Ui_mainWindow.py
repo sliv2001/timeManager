@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'mainWindowjeVrTh.ui'
+## Form generated from reading UI file 'mainWindowWwYVgK.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -139,6 +139,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         self.itemVerboseButtonBox.rejected.connect(self.closeVerboseItem.trigger)
+        self.listView.doubleClicked.connect(self.verboseItem.trigger)
 
         self.tabWidget.setCurrentIndex(0)
 
