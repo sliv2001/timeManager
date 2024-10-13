@@ -45,7 +45,6 @@ class MainWindow(QMainWindow):
     self.ui.checkItem.triggered.connect(slot=self.checkTriggered)
     self.ui.upItem.triggered.connect(slot=self.upItemTriggered)
     self.ui.downItem.triggered.connect(slot=self.downItemTriggered)
-    # self.ui.listView.itemChanged.connect(slot=self.item_checked)
     self.ui.listView.selectionModel().selectionChanged.connect(slot=self.itemSelectionChanged)
     self.ui.listView.addAction(self.ui.addItem)
     self.ui.listView.addAction(self.ui.removeItem)
@@ -103,6 +102,8 @@ class MainWindow(QMainWindow):
     enable = lenCI > 0
     self.ui.removeItem.setEnabled(enable)
     self.ui.verboseItem.setEnabled(enable)
+    self.ui.upItem.setEnabled(lenCI == 1)
+    self.ui.downItem.setEnabled(lenCI == 1)
     self.ui.checkItem.setEnabled(lenCI == 1)
     self.ui.checkItem.setChecked(lenCI == 1 and currentItems[0].data(role=Qt.ItemDataRole.CheckStateRole) == Qt.CheckState.Checked)
     self.ui.buttonBox.buttons()[2].setEnabled(lenCI == 1)

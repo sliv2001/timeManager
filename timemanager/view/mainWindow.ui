@@ -85,7 +85,17 @@
      </widget>
     </item>
     <item row="1" column="0">
-     <widget class="QListView" name="listView"/>
+     <widget class="QListView" name="listView">
+      <property name="contextMenuPolicy">
+       <enum>Qt::ContextMenuPolicy::ActionsContextMenu</enum>
+      </property>
+      <property name="accessibleDescription">
+       <string/>
+      </property>
+      <property name="selectionMode">
+       <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
