@@ -7,7 +7,6 @@ from PySide6.QtGui import QColor
 from timemanager.view.Ui_mainWindow import Ui_MainWindow
 from timemanager.presenter.presenter import Presenter
 from timemanager.presenter.ViewData import ViewData
-from timemanager.view.listItem import ListItem
 from timemanager.view.VerboseView import VerboseView
 from timemanager.presenter.Statuses import ViewStatuses
 
