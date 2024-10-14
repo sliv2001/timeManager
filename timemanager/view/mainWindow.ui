@@ -212,7 +212,7 @@
     <string>Поднять элемент вверх по приоритету</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Shift+Num+Up</string>
+    <string>Ctrl+Up</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>
@@ -229,7 +229,7 @@
     <string>Опустить элемент вниз</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Shift+Num+Down</string>
+    <string>Ctrl+Down</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'mainWindowWwYVgK.ui'
+## Form generated from reading UI file 'mainWindowRhJrYs.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -189,14 +189,14 @@ class Ui_MainWindow(object):
         self.upItem.setToolTip(QCoreApplication.translate("MainWindow", u"\u041f\u043e\u0434\u043d\u044f\u0442\u044c \u044d\u043b\u0435\u043c\u0435\u043d\u0442 \u0432\u0432\u0435\u0440\u0445 \u043f\u043e \u043f\u0440\u0438\u043e\u0440\u0438\u0442\u0435\u0442\u0443", None))
 #endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(shortcut)
-        self.upItem.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+Shift+Num+Up", None))
+        self.upItem.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+Up", None))
 #endif // QT_CONFIG(shortcut)
         self.downItem.setText(QCoreApplication.translate("MainWindow", u"\u041e\u043f\u0443\u0441\u0442\u0438\u0442\u044c \u0432\u043d\u0438\u0437", None))
 #if QT_CONFIG(tooltip)
         self.downItem.setToolTip(QCoreApplication.translate("MainWindow", u"\u041e\u043f\u0443\u0441\u0442\u0438\u0442\u044c \u044d\u043b\u0435\u043c\u0435\u043d\u0442 \u0432\u043d\u0438\u0437", None))
 #endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(shortcut)
-        self.downItem.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+Shift+Num+Down", None))
+        self.downItem.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+Down", None))
 #endif // QT_CONFIG(shortcut)
         self.itemVerboseGroupBox.setTitle(QCoreApplication.translate("MainWindow", u"GroupBox", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.text), QCoreApplication.translate("MainWindow", u"\u0424\u043e\u0440\u043c\u0430\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u044b\u0439 \u0442\u0435\u043a\u0441\u0442", None))
