@@ -85,7 +85,7 @@ class MainWindow(QMainWindow):
       self.presenter.UpdateItem(ViewData(currentItems[0].internalId(),
                                          status=ViewStatuses.Done if checked else ViewStatuses.Undone,
                                          dateTime=datetime.now(),
-                                         elapsedTime=15*60))
+                                         elapsedTime=15*60), row=currentItems[0].row())
 
   @Slot()
   def upItemTriggered(self):

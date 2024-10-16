@@ -147,15 +147,6 @@ class Presenter(QAbstractItemModel):
 
 # ////////////////////////////////////////////////////// View-side functions ////////////////////////////////////////////////////// #
 
-  def _updateView(self, topLeft = None, bottomRight = None, rolesList = None):
-    self._updatedCache = False
-    if topLeft is None:
-      topLeft = self.createIndex(0, 0, self._getCache()[0].itemPK)
-    if bottomRight is None:
-      lastIndex = self.rowCount()-1
-      bottomRight = QAbstractItemModel.createIndex(lastIndex, 0, self._getCache()[lastIndex].itemPK)
-    self.dataChanged.emit(topLeft, bottomRight, rolesList)
-
   def AddItem(self, item: ViewData, prevItemPK = None):
     self.beginInsertRows(QModelIndex(), self.rowCount(), self.rowCount()+1)
     pk = self._addItem(item.itemName, item.status, prevItemPK=prevItemPK)
@@ -174,9 +165,11 @@ class Presenter(QAbstractItemModel):
     # self._updateView()
     return result
 
-  def UpdateItem(self, item: ViewData):
+  def UpdateItem(self, item: ViewData, row: int = None):
     self._updateItem(item)
-    # self._updateView()
+    if not row is None:
+      self._updatedCache = False
+      self.dataChanged.emit(row, row, [Qt.ItemDataRole.CheckStateRole, Qt.ItemDataRole.DisplayRole])
 
   def UpdateItems(self, items: list[ViewData]):
     self._updateItems(items)
@@ -222,7 +215,7 @@ class Presenter(QAbstractItemModel):
 
   def setData(self, index: QModelIndex | QPersistentModelIndex, value: Any, role: int = ...) -> bool:
     if role == Qt.ItemDataRole.CheckStateRole and value != Qt.CheckState.PartiallyChecked.value:
-      self.UpdateItem(ViewData(index.internalId(),
+      self._updateItem(ViewData(index.internalId(),
                                status=ViewStatuses.Done if value == Qt.CheckState.Checked.value else ViewStatuses.Undone,
                                dateTime=datetime.now(),
                                elapsedTime=15*60))
