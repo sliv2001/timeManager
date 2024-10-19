@@ -1,16 +1,25 @@
 from datetime import datetime, date, timedelta
+from typing import Any
 from pony import orm
+from PySide6.QtCore import QAbstractItemModel, QModelIndex, QPersistentModelIndex, Qt
+from PySide6.QtGui import QColor
 from timemanager.model.model import Fulfill, Items, Statuses
 from .ViewData import ViewData
 from .Statuses import ModelStatuses, ViewStatuses, ModelFulfillments, AllModelNames
 from .PriorityHandler import PriorityHandler
 
-class Presenter:
+class Presenter(QAbstractItemModel):
+
+  _cache: list
+  _updatedCache: bool = False
 
   def __init__(self, view) -> None:
+    super().__init__(view)
     self.initDatabase()
     self.view = view
     self.priorityHandler = PriorityHandler()
+
+# ////////////////////////////////////////////////////// Model-side functions ///////////////////////////////////////////////////// #
 
   def initDatabase(self):
     self.initStatuses()
@@ -36,19 +45,6 @@ class Presenter:
     statusEntry = Statuses.get(name=statusLine)
     itemEntry = Items(name=itemName, status=statusEntry, priority=priority)
     return itemEntry.pk
-
-  @orm.db_session
-  def _removeItems(self, itemPKs):
-    for itemPK in itemPKs:
-      self._updateItem(ViewData(itemPK, status=ModelStatuses.Removed))
-
-  def _updateView(self):
-    self.view.update()
-
-  def AddItem(self, item: ViewData, prevItemPK = None):
-    pk = self._addItem(item.itemName, item.status, prevItemPK=prevItemPK)
-    self._updateView()
-    return pk
 
   @orm.db_session
   def getDataSince(self, dateTime):
@@ -98,6 +94,7 @@ class Presenter:
 
   @orm.db_session
   def _updateItem(self, item: ViewData):
+    self._updatedCache = False
     if item.itemPK is None:
       raise RuntimeError('Expected non-None item to update!')
     itemEntry = Items[item.itemPK]
@@ -106,39 +103,123 @@ class Presenter:
     if item.itemName is not None:
       itemEntry.name = item.itemName
     if item.status is not None:
-      statusEntry = Statuses.get(name=item.status)
-      itemEntry.status = statusEntry
+      self._updateStatus(item, itemEntry)
     if item.timeout is not None:
       itemEntry.timeout = item.timeout
 
-  def RemoveItem(self, itemPK):
-    self._removeItems([itemPK])
-    self._updateView()
-
-  def RemoveItems(self, itemPKs):
-    self._removeItems(itemPKs)
-    self._updateView()
-
-  def SetItemDone(self, itemPK: int, status: bool, elapsedTime, dateTime: datetime):
-    self._setItemDone(itemPK, status, elapsedTime, dateTime)
+  @orm.db_session
+  def _updateStatus(self, item, itemEntry):
+    if item.status == ViewStatuses.Done or item.status == ViewStatuses.Undone:
+      self._setItemDone(item.itemPK, item.status, item.elapsedTime, item.dateTime)
+    elif item.status == ViewStatuses.Pending:
+      raise RuntimeError('Currently Pending is not supported')
+    else:
+      statusName = ViewStatuses.toModel(item.status)
+      if statusName == ModelStatuses.Removed:
+        self.beginRemoveRows(QModelIndex(), item.itemIndex, item.itemIndex)
+        statusEntry = Statuses.get(name=statusName)
+        itemEntry.status = statusEntry
+        self.endRemoveRows()
+        self._updatedCache = False
+      else:
+        statusEntry = Statuses.get(name=statusName)
+        itemEntry.status = statusEntry
 
   @orm.db_session
   def _setItemDone(self, itemPK, status, elapsedTime, dateTime):
-    if status:
-      statusLine = ModelFulfillments.Done
+    if status == ViewStatuses.Done:
+      fulfillLine = ModelFulfillments.Done
+      self._addFulfill(itemPK, fulfillLine, elapsedTime, dateTime)
     else:
-      statusLine = self._getPreviousFulfillmentStatus(itemPK)
-    self._addFulfill(itemPK, statusLine, elapsedTime, dateTime)
-    self._updateView()
+      fulfillLine = self._getPreviousFulfillmentStatus(itemPK)
+      self._addFulfill(itemPK, fulfillLine, elapsedTime, dateTime)
+
+  @orm.db_session
+  def _updateItems(self, items: list[ViewData]):
+    for item in items:
+      self._updateItem(item)
+
+  def _getCache(self):
+    if not self._updatedCache:
+      self._cache = self.getDataSinceToday()
+      self._updatedCache = True
+    return self._cache
+
+# ////////////////////////////////////////////////////// View-side functions ////////////////////////////////////////////////////// #
+
+  def AddItem(self, item: ViewData, prevItemPK = None):
+    self.beginInsertRows(QModelIndex(), self.rowCount(), self.rowCount()+1)
+    pk = self._addItem(item.itemName, item.status, prevItemPK=prevItemPK)
+    self._updatedCache = False
+    self.endInsertRows()
+    return pk
 
   def GetItem(self, itemPK):
     return self._getItem(itemPK)
 
-  def SetItemAfter(self, itemPK, afterItemPK):
-    result = self.priorityHandler.SetAfter(itemPK, afterItemPK)
-    self._updateView()
+  def SetItemAfter(self, item: QModelIndex, afterItem: QModelIndex):
+    self.beginMoveRows(QModelIndex(), item.row(), item.row(), QModelIndex(), afterItem.row()+1)
+    result = self.priorityHandler.SetAfter(item.internalId(), afterItem.internalId())
+    self._updatedCache = False
+    self.endMoveRows()
+    # self._updateView()
     return result
 
-  def UpdateItem(self, item: ViewData):
+  def UpdateItem(self, item: ViewData, row: int = None):
     self._updateItem(item)
-    self._updateView()
+    if not row is None:
+      self._updatedCache = False
+      self.dataChanged.emit(row, row, [Qt.ItemDataRole.CheckStateRole, Qt.ItemDataRole.DisplayRole])
+
+  def UpdateItems(self, items: list[ViewData]):
+    self._updateItems(items)
+
+# ///////////////////////////////////////////////// Redefinition of model members ///////////////////////////////////////////////// #
+
+  def rowCount(self, parent=None):
+    return len(self._getCache())
+
+  def columnCount(self, parent=None):
+    return 1 # List -> columnCount is constant 1
+
+  def parent(self, index):
+    return QModelIndex()
+
+  def index(self, row, column, parent = None):
+    if (column > 1):
+      return QModelIndex()
+    return self.createIndex(row, column, self._getCache()[row].itemPK)
+
+  def data(self, index: QModelIndex | QPersistentModelIndex, role: int = ...) -> Any:
+    # See this for roles description:
+    # https://doc.qt.io/qt-6/qt.html#ItemDataRole-enum
+    if role == Qt.ItemDataRole.DisplayRole:
+      return self._getCache()[index.row()].itemName
+    elif role == Qt.ItemDataRole.BackgroundRole:
+      if self._getCache()[index.row()].status == ViewStatuses.Outdated:
+        return QColor("Red")
+      else:
+        return None
+    elif role == Qt.ItemDataRole.CheckStateRole:
+      if self._getCache()[index.row()].status == ViewStatuses.Done:
+        return Qt.CheckState.Checked
+      else:
+        return Qt.CheckState.Unchecked
+    else:
+      return None
+
+  def flags(self, index: QModelIndex | QPersistentModelIndex) -> Qt.ItemFlag:
+    # See this for item flags description:
+    # https://doc.qt.io/qt-6/qt.html#ItemFlag-enum
+    return Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsUserCheckable | Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemNeverHasChildren
+
+  def setData(self, index: QModelIndex | QPersistentModelIndex, value: Any, role: int = ...) -> bool:
+    if role == Qt.ItemDataRole.CheckStateRole and value != Qt.CheckState.PartiallyChecked.value:
+      self._updateItem(ViewData(index.internalId(),
+                               status=ViewStatuses.Done if value == Qt.CheckState.Checked.value else ViewStatuses.Undone,
+                               dateTime=datetime.now(),
+                               elapsedTime=15*60))
+      self._updatedCache = False
+      self.dataChanged.emit(index, index, [role])
+      return True
+    return False

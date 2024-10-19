@@ -1,4 +1,4 @@
-from PySide6.QtCore import Slot
+from PySide6.QtCore import Slot, QModelIndex
 from PySide6.QtWidgets import QDialogButtonBox
 from timemanager.view.Ui_mainWindow import Ui_MainWindow
 from timemanager.presenter.presenter import Presenter
@@ -23,17 +23,17 @@ class VerboseView:
 
   @Slot()
   def show(self):
-    currentItems = self.ui.listWidget.selectedItems()
+    currentItems = self.ui.listView.selectedIndexes()
     if len(currentItems) == 1:
-      currentItem = self.ui.listWidget.selectedItems()[0]
+      currentItem = currentItems[0]
       self.updateInterface(currentItem)
 
     else:
       raise RuntimeError("One item must be chosen for showing verbose view!")
 
-  def updateInterface(self, currentItem):
-      currentItemData = self.presenter.GetItem(currentItem.itemPK)
-      self.itemPK = currentItem.itemPK
+  def updateInterface(self, currentItem: QModelIndex):
+      currentItemData = self.presenter.GetItem(currentItem.internalId())
+      self.itemPK = currentItem.internalId()
       self.name = currentItemData.itemName
       self.verboseText = currentItemData.comment
       self._drawInterface()
