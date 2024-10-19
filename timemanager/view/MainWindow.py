@@ -106,6 +106,7 @@ class MainWindow(QMainWindow):
     self.ui.upItem.setEnabled(lenCI == 1)
     self.ui.downItem.setEnabled(lenCI == 1)
     self.ui.checkItem.setEnabled(lenCI == 1)
+    self.ui.verboseItem.setEnabled(lenCI == 1)
     self.ui.checkItem.setChecked(lenCI == 1 and currentItems[0].data(role=Qt.ItemDataRole.CheckStateRole) == Qt.CheckState.Checked)
     self.ui.buttonBox.buttons()[2].setEnabled(lenCI == 1)
     self.ui.buttonBox.buttons()[3].setEnabled(lenCI == 1)
