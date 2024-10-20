@@ -92,6 +92,9 @@
       <property name="accessibleDescription">
        <string/>
       </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+      </property>
       <property name="selectionMode">
        <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>
       </property>

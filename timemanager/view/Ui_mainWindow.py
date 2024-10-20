@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'mainWindowRhJrYs.ui'
+## Form generated from reading UI file 'mainWindowpczPBF.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -124,6 +124,7 @@ class Ui_MainWindow(object):
         self.listView = QListView(self.centralwidget)
         self.listView.setObjectName(u"listView")
         self.listView.setContextMenuPolicy(Qt.ContextMenuPolicy.ActionsContextMenu)
+        self.listView.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.listView.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
 
         self.gridLayout.addWidget(self.listView, 1, 0, 1, 1)
