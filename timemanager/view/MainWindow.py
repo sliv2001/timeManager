@@ -74,7 +74,7 @@ class MainWindow(QMainWindow):
   def deleteTriggered(self):
     currentItems = self.ui.listView.selectedIndexes()
     if len(currentItems) > 0:
-      self.presenter.UpdateItems([ViewData(itemPK=itemIndex.internalId(), itemIndex=itemIndex.row(), status=ViewStatuses.Removed) for itemIndex in currentItems])
+      self.presenter.RemoveItems([ViewData(itemPK=itemIndex.internalId(), itemIndex=itemIndex.row(), status=ViewStatuses.Removed) for itemIndex in currentItems])
     else:
       raise RuntimeError('Delete triggered for empty range of objects!')
 

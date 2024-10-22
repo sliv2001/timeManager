@@ -116,10 +116,8 @@ class Presenter(QAbstractItemModel):
     else:
       statusName = ViewStatuses.toModel(item.status)
       if statusName == ModelStatuses.Removed:
-        self.beginRemoveRows(QModelIndex(), item.itemIndex, item.itemIndex)
         statusEntry = Statuses.get(name=statusName)
         itemEntry.status = statusEntry
-        self.endRemoveRows()
         self._updatedCache = False
       else:
         statusEntry = Statuses.get(name=statusName)
@@ -173,6 +171,17 @@ class Presenter(QAbstractItemModel):
 
   def UpdateItems(self, items: list[ViewData]):
     self._updateItems(items)
+
+  def RemoveItems(self, items: list[ViewData]):
+    self._updatedCache = False
+    indexes = [item.itemIndex for item in items]
+    maxIndex = max(indexes)
+    minIndex = min(indexes)
+    self.beginRemoveRows(QModelIndex(), minIndex, maxIndex)
+    for item in items:
+      item.status = ViewStatuses.Removed
+      self._updateItem(item)
+    self.endRemoveRows()
 
 # ///////////////////////////////////////////////// Redefinition of model members ///////////////////////////////////////////////// #
 
