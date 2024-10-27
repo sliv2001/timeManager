@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'mainWindowpczPBF.ui'
+## Form generated from reading UI file 'mainWindowclVzmz.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -17,10 +17,11 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
 from PySide6.QtWidgets import (QAbstractButton, QAbstractItemView, QApplication, QDialogButtonBox,
-    QGridLayout, QGroupBox, QLabel, QListView,
-    QMainWindow, QMenuBar, QPlainTextEdit, QSizePolicy,
-    QStatusBar, QTabWidget, QTextEdit, QVBoxLayout,
-    QWidget)
+    QGridLayout, QGroupBox, QLabel, QMainWindow,
+    QMenuBar, QPlainTextEdit, QSizePolicy, QStatusBar,
+    QTabWidget, QTextEdit, QVBoxLayout, QWidget)
+
+from .CustomListView import CustomListView
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -121,7 +122,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
 
-        self.listView = QListView(self.centralwidget)
+        self.listView = CustomListView(self.centralwidget)
         self.listView.setObjectName(u"listView")
         self.listView.setContextMenuPolicy(Qt.ContextMenuPolicy.ActionsContextMenu)
         self.listView.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
