@@ -70,7 +70,7 @@
           <locale language="Russian" country="Russia"/>
          </property>
          <property name="standardButtons">
-          <set>QDialogButtonBox::StandardButton::Apply|QDialogButtonBox::StandardButton::Close</set>
+          <set>QDialogButtonBox::StandardButton::Close|QDialogButtonBox::StandardButton::Save</set>
          </property>
         </widget>
        </item>

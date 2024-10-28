@@ -14,15 +14,17 @@ class VerboseView:
   def __init__(self, ui, presenter):
     self.ui = ui
     self.presenter = presenter
-    self.ui.itemVerboseButtonBox.button(QDialogButtonBox.StandardButton.Apply).setText("Применить")
-    self.ui.itemVerboseButtonBox.button(QDialogButtonBox.StandardButton.Apply).clicked.connect(self.saveAndHide)
     self.ui.itemVerboseButtonBox.button(QDialogButtonBox.StandardButton.Close).setText("Скрыть")
     self.ui.itemVerboseButtonBox.button(QDialogButtonBox.StandardButton.Close).clicked.connect(self.hide)
+    self.ui.itemVerboseButtonBox.button(QDialogButtonBox.StandardButton.Save).clicked.connect(self.saveAndHide)
+    self.ui.itemVerboseButtonBox.button(QDialogButtonBox.StandardButton.Save).setText("Сохранить")
     self.ui.tabWidget.currentChanged.connect(slot=self.switchTextFormat)
     self.hide()
 
   @Slot()
   def show(self):
+    if self.ui.itemVerboseGroupBox.isVisible():
+      self.save()
     currentItems = self.ui.listView.selectedIndexes()
     if len(currentItems) == 1:
       currentItem = currentItems[0]

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'mainWindowclVzmz.ui'
+## Form generated from reading UI file 'mainWindowLEQNHJ.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -110,7 +110,7 @@ class Ui_MainWindow(object):
         self.itemVerboseButtonBox = QDialogButtonBox(self.itemVerboseGroupBox)
         self.itemVerboseButtonBox.setObjectName(u"itemVerboseButtonBox")
         self.itemVerboseButtonBox.setLocale(QLocale(QLocale.Russian, QLocale.Russia))
-        self.itemVerboseButtonBox.setStandardButtons(QDialogButtonBox.StandardButton.Apply|QDialogButtonBox.StandardButton.Close)
+        self.itemVerboseButtonBox.setStandardButtons(QDialogButtonBox.StandardButton.Close|QDialogButtonBox.StandardButton.Save)
 
         self.verticalLayout.addWidget(self.itemVerboseButtonBox)
 
