@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 
 from PySide6.QtCore import Qt, Slot, QModelIndex
 from PySide6.QtWidgets import QMainWindow, QWidget, QAbstractButton, QPushButton, QDialogButtonBox, QInputDialog
@@ -9,6 +9,7 @@ from timemanager.presenter.presenter import Presenter
 from timemanager.presenter.ViewData import ViewData
 from timemanager.view.VerboseView import VerboseView
 from timemanager.presenter.Statuses import ViewStatuses
+from timemanager.view.ViewUpdateTimers import ViewUpdateTimers
 
 class MainWindow(QMainWindow):
 
@@ -21,6 +22,9 @@ class MainWindow(QMainWindow):
     self.presenter = Presenter(self)
     self.ui.listView.setModel(self.presenter)
     self.verboseView = VerboseView(self.ui, self.presenter)
+
+    self.timers = ViewUpdateTimers(self.ui, self.presenter)
+    self.timers.setUpdateTime(time(hour=0, minute=0, second=0))
 
     closeButton = QPushButton(text="Закрыть", parent=self.ui.buttonBox)
     closeButton.setObjectName("closeButton")
