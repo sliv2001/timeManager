@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'mainWindowLEQNHJ.ui'
+## Form generated from reading UI file 'mainWindowgiqJNR.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -66,6 +66,9 @@ class Ui_MainWindow(object):
         icon5 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.GoDown))
         self.downItem.setIcon(icon5)
         self.downItem.setMenuRole(QAction.MenuRole.NoRole)
+        self.chooseRandom = QAction(MainWindow)
+        self.chooseRandom.setObjectName(u"chooseRandom")
+        self.chooseRandom.setMenuRole(QAction.MenuRole.ApplicationSpecificRole)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
@@ -199,6 +202,13 @@ class Ui_MainWindow(object):
 #endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(shortcut)
         self.downItem.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+Down", None))
+#endif // QT_CONFIG(shortcut)
+        self.chooseRandom.setText(QCoreApplication.translate("MainWindow", u"\u0421\u043b\u0443\u0447\u0430\u0439\u043d\u044b\u0439 \u044d\u043b\u0435\u043c\u0435\u043d\u0442", None))
+#if QT_CONFIG(tooltip)
+        self.chooseRandom.setToolTip(QCoreApplication.translate("MainWindow", u"\u041f\u0440\u0435\u0434\u043b\u043e\u0436\u0438\u0442\u044c \u0441\u043b\u0443\u0447\u0430\u0439\u043d\u044b\u0439 \u044d\u043b\u0435\u043c\u0435\u043d\u0442", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(shortcut)
+        self.chooseRandom.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+R", None))
 #endif // QT_CONFIG(shortcut)
         self.itemVerboseGroupBox.setTitle(QCoreApplication.translate("MainWindow", u"GroupBox", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.text), QCoreApplication.translate("MainWindow", u"\u0424\u043e\u0440\u043c\u0430\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u044b\u0439 \u0442\u0435\u043a\u0441\u0442", None))
