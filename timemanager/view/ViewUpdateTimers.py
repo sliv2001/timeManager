@@ -11,11 +11,22 @@ class ViewUpdateTimers:
   def __init__(self, ui, presenter):
     self.ui = ui
     self.presenter = presenter
+    self.presenter.layoutChanged.connect(self.setActualUpdateTime)
+    self.presenter.dataChanged.connect(self.setActualUpdateTime)
+    self.updateTime = datetime.now()
+
+  @staticmethod
+  def compareTimeGt(a: time, b: time):
+    return a.hour >= b.hour and a.minute >= b.minute and a.second >= b.second
+
+  @Slot()
+  def setActualUpdateTime(self, *args):
+    self.updateTime = datetime.now()
 
   @Slot()
   def timeout(self):
     now = datetime.now()
-    if any(now.hour == tt.hour and now.minute == tt.minute and now.second == tt.second for tt in self._timers):
+    if any(self.compareTimeGt(now, tt) and self.compareTimeGt(tt, self.updateTime) for tt in self._timers):
       self.presenter.layoutChanged.emit()
 
   def setUpdateTime(self, time: time):
