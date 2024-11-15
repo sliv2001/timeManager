@@ -30,6 +30,7 @@ class ViewUpdateTimers:
            self.compareTimeGt(tt, now) and self.compareTimeGt(self.updateTime, tt) for tt in self._timers):
       # TODO config: debug log and updating messages
       print('Interface was updated')
+      self.presenter._updatedCache = False
       self.presenter.layoutChanged.emit()
 
   def setUpdateTime(self, time: time):
