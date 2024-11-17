@@ -58,4 +58,4 @@ class ViewUpdateTimers:
     timer = QTimer(self.ui.listView)
     timer.timeout.connect(slot=self.timeout)
     timer.start(1000)
-    self._timers.append(Timer(time, True))
+    self._timers.append(Timer(time, False))
