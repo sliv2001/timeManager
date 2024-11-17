@@ -3,8 +3,18 @@ from PySide6.QtCore import QTimer, Slot
 from timemanager.view.Ui_mainWindow import Ui_MainWindow
 from timemanager.presenter.presenter import Presenter
 
+class Timer:
+  tt: time
+  updated: bool
+  updateDT: datetime
+
+  def __init__(self, time, updated):
+    self.tt = time
+    self.updated = updated
+    self.updateDT = datetime.now()
+
 class ViewUpdateTimers:
-  _timers: list[time] = []
+  _timers: list[Timer] = []
   ui: Ui_MainWindow
   presenter: Presenter
 
@@ -13,7 +23,6 @@ class ViewUpdateTimers:
     self.presenter = presenter
     self.presenter.layoutChanged.connect(self.setActualUpdateTime)
     self.presenter.dataChanged.connect(self.setActualUpdateTime)
-    self.updateTime = datetime.now()
 
   @staticmethod
   def compareTimeGt(a: time, b: time):
@@ -21,20 +30,32 @@ class ViewUpdateTimers:
 
   @Slot()
   def setActualUpdateTime(self, *args):
-    self.updateTime = datetime.now()
+    now = datetime.now()
+    for timer in self._timers:
+      if self.compareTimeGt(now, timer.tt):
+        timer.updated = True
+        timer.updateDT = now
 
   @Slot()
   def timeout(self):
     now = datetime.now()
-    if any(self.compareTimeGt(now, tt) and self.compareTimeGt(tt, self.updateTime) or
-           self.compareTimeGt(tt, now) and self.compareTimeGt(self.updateTime, tt) for tt in self._timers):
-      # TODO config: debug log and updating messages
-      print('Interface was updated')
-      self.presenter._updatedCache = False
-      self.presenter.layoutChanged.emit()
+    if now.hour == 0 and now.minute == 0 and (now.second == 0 or now.second == 1):
+      self.nightlyReset()
+    if any(self.compareTimeGt(now, timer.tt) and not timer.updated or timer.updateDT.date() < now.date() for timer in self._timers):
+      self.updateByTimer()
+
+  def updateByTimer(self):
+    # TODO config: debug log and updating messages
+    print('Interface was updated')
+    self.presenter._updatedCache = False
+    self.presenter.layoutChanged.emit()
+
+  def nightlyReset(self):
+    for timer in self._timers:
+      timer.updated = False
 
   def setUpdateTime(self, time: time):
     timer = QTimer(self.ui.listView)
     timer.timeout.connect(slot=self.timeout)
     timer.start(1000)
-    self._timers.append(time)
+    self._timers.append(Timer(time, True))
