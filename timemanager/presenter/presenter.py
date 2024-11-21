@@ -156,8 +156,8 @@ class Presenter(QAbstractItemModel):
     return self._getItem(itemPK)
 
   def SetItemAfter(self, item: QModelIndex, afterItem: QModelIndex):
-    self.beginMoveRows(QModelIndex(), item.row(), item.row(), QModelIndex(), afterItem.row()+1)
-    result = self.priorityHandler.SetAfter(item.internalId(), afterItem.internalId())
+    self.beginMoveRows(QModelIndex(), item.row(), item.row(), QModelIndex(), afterItem.row()+1 if afterItem.isValid() else 0)
+    result = self.priorityHandler.SetAfter(item.internalId(), afterItem.internalId() if afterItem.isValid() else None)
     self._updatedCache = False
     self.endMoveRows()
     # self._updateView()
@@ -195,7 +195,7 @@ class Presenter(QAbstractItemModel):
     return QModelIndex()
 
   def index(self, row, column, parent = None):
-    if (column > 1):
+    if (column > 1 or row < 0 or row > self.rowCount()-1):
       return QModelIndex()
     return self.createIndex(row, column, self._getCache()[row].itemPK)
 

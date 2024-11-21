@@ -149,7 +149,5 @@ class MainWindow(QMainWindow):
     # If we move to the top, we must put current item after one before previous,
     # Otherwise, after one after following
     newIndex = currentIndex + step - 1 if step < 0 else currentIndex + step
-    try:
-      self.presenter.SetItemAfter(currentItem, self.presenter.index(newIndex, 0, QModelIndex()))
-    except AttributeError as e:
-      self.presenter.SetItemAfter(currentItem.itemPK, None)
+    modelIndex = self.presenter.index(newIndex, 0, QModelIndex())
+    self.presenter.SetItemAfter(currentItem, modelIndex)
