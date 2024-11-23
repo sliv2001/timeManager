@@ -1,9 +1,9 @@
 from datetime import datetime, timedelta, time
 from random import randint
 
-from PySide6.QtCore import Qt, Slot, QModelIndex, QItemSelectionModel
+from PySide6.QtCore import Qt, Slot, QModelIndex, QItemSelectionModel, QSettings
 from PySide6.QtWidgets import QMainWindow, QWidget, QAbstractButton, QPushButton, QDialogButtonBox, QInputDialog
-from PySide6.QtGui import QColor
+from PySide6.QtGui import QCloseEvent
 
 from timemanager.view.Ui_mainWindow import Ui_MainWindow
 from timemanager.presenter.presenter import Presenter
@@ -16,11 +16,12 @@ class MainWindow(QMainWindow):
 
   ui: Ui_MainWindow
 
-  def __init__(self, parent: QWidget | None = ..., flags: Qt.WindowType = ...) -> None:
+  def __init__(self, settings: QSettings, parent: QWidget | None = ..., flags: Qt.WindowType = ...) -> None:
     super(MainWindow, self).__init__()
+    self.settings = settings
     self.ui = Ui_MainWindow()
     self.ui.setupUi(self)
-    self.presenter = Presenter(self)
+    self.presenter = Presenter(self, settings)
     self.ui.listView.setModel(self.presenter)
     self.verboseView = VerboseView(self.ui, self.presenter)
 
@@ -66,6 +67,30 @@ class MainWindow(QMainWindow):
     self.ui.listView.addAction(self.ui.chooseRandom)
 
     self.enableItemEditActions()
+    self.applyViewSettings()
+
+####### Events redefinition
+
+  def closeEvent(self, event: QCloseEvent) -> None:
+    self.saveSettings()
+    return super().closeEvent(event)
+
+####### Settings
+
+  @staticmethod
+  def readSetting(settings: QSettings, variable: str, default):
+    setting = settings.value(f'view/{variable}')
+    return setting if not setting is None else default
+
+  @staticmethod
+  def writeSetting(settings: QSettings, variable: str, value):
+    settings.setValue(f'view/{variable}', value)
+
+  def applyViewSettings(self):
+    self.setGeometry(self.readSetting(self.settings, 'mainWindow/geometry', self.geometry()))
+
+  def saveSettings(self):
+    self.writeSetting(self.settings, 'mainWindow/geometry', self.geometry())
 
 ####### Events handling slots
 

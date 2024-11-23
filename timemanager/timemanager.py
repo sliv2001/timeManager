@@ -8,6 +8,6 @@ from timemanager.application import Application
 def main():
     settings = QSettings('ISTech', 'TimeManager')
     app = Application(settings, sys.argv)
-    window = MainWindow()
+    window = MainWindow(app.settings)
     window.show()
     sys.exit(app.exec())
