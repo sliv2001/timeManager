@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, time
 from random import randint
 
-from PySide6.QtCore import Qt, Slot, QModelIndex, QItemSelectionModel, QSettings
+from PySide6.QtCore import Qt, Signal, Slot, QModelIndex, QItemSelectionModel
 from PySide6.QtWidgets import QMainWindow, QWidget, QAbstractButton, QPushButton, QDialogButtonBox, QInputDialog
 from PySide6.QtGui import QCloseEvent
 
@@ -11,12 +11,15 @@ from timemanager.presenter.ViewData import ViewData
 from timemanager.view.VerboseView import VerboseView
 from timemanager.presenter.Statuses import ViewStatuses
 from timemanager.view.ViewUpdateTimers import ViewUpdateTimers
+from timemanager.utils.settings import Settings
 
 class MainWindow(QMainWindow):
 
   ui: Ui_MainWindow
+  windowInitialized = Signal(None, name = 'windowInitialized')
+  windowClosed = Signal(None, name = 'windowClosed')
 
-  def __init__(self, settings: QSettings, parent: QWidget | None = ..., flags: Qt.WindowType = ...) -> None:
+  def __init__(self, settings: Settings, parent: QWidget | None = ..., flags: Qt.WindowType = ...) -> None:
     super(MainWindow, self).__init__()
     self.settings = settings
     self.ui = Ui_MainWindow()
@@ -67,36 +70,24 @@ class MainWindow(QMainWindow):
     self.ui.listView.addAction(self.ui.chooseRandom)
 
     self.enableItemEditActions()
-    self.applyViewSettings()
+
+    self.windowInitialized.connect(self.settings.applySettings)
+    self.windowClosed.connect(self.windowClosing)
+    self.windowClosed.connect(self.settings.saveSettings)
+    self.settings.addSetting('view/mainWindow/geometry', self.geometry, self.setGeometry)
+    self.windowInitialized.emit()
 
 ####### Events redefinition
 
   def closeEvent(self, event: QCloseEvent) -> None:
-    self.saveSettings()
+    self.windowClosed.emit()
     return super().closeEvent(event)
-
-####### Settings
-
-  @staticmethod
-  def readSetting(settings: QSettings, variable: str, default):
-    setting = settings.value(f'view/{variable}')
-    return setting if not setting is None else default
-
-  @staticmethod
-  def writeSetting(settings: QSettings, variable: str, value):
-    settings.setValue(f'view/{variable}', value)
-
-  def applyViewSettings(self):
-    self.setGeometry(self.readSetting(self.settings, 'mainWindow/geometry', self.geometry()))
-
-  def saveSettings(self):
-    self.writeSetting(self.settings, 'mainWindow/geometry', self.geometry())
 
 ####### Events handling slots
 
   @Slot()
   def closeButton_clicked(self, button: QAbstractButton):
-    exit()
+    self.close()
 
   @Slot()
   def addTriggered(self, button: QAbstractButton):
@@ -135,6 +126,10 @@ class MainWindow(QMainWindow):
   @Slot()
   def downItemTriggered(self):
     self.makePriorityStep(1)
+
+  @Slot()
+  def windowClosing(self):
+    self.saveBeforeExit()
 
   ####### UI Updating facilities
 
@@ -176,3 +171,6 @@ class MainWindow(QMainWindow):
     newIndex = currentIndex + step - 1 if step < 0 else currentIndex + step
     modelIndex = self.presenter.index(newIndex, 0, QModelIndex())
     self.presenter.SetItemAfter(currentItem, modelIndex)
+
+  def saveBeforeExit(self):
+    self.verboseView.save()
