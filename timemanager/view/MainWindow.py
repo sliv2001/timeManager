@@ -74,7 +74,8 @@ class MainWindow(QMainWindow):
     self.windowInitialized.connect(self.settings.applySettings)
     self.windowClosed.connect(self.windowClosing)
     self.windowClosed.connect(self.settings.saveSettings)
-    self.settings.addSetting('view/mainWindow/geometry', self.geometry, self.setGeometry)
+    self.settings.addSetting('view/mainWindow/geometry', self.normalGeometry, self.setGeometry)
+    self.settings.addSetting('view/mainWindow/fullscreen', self.isFullScreen, self.setFullScreen)
     self.windowInitialized.emit()
 
 ####### Events redefinition
@@ -132,6 +133,12 @@ class MainWindow(QMainWindow):
     self.saveBeforeExit()
 
   ####### UI Updating facilities
+
+  def setFullScreen(self, full: bool):
+    if full:
+      self.showFullScreen()
+    else:
+      self.showNormal()
 
   def enableItemEditActions(self):
     currentItems = self.ui.listView.selectedIndexes()
