@@ -21,6 +21,9 @@ class VerboseView:
     self.ui.tabWidget.currentChanged.connect(slot=self.switchTextFormat)
     self.hide()
 
+  def isValid(self):
+    return self.itemPK >= 0
+
   @Slot()
   def show(self):
     if self.ui.itemVerboseGroupBox.isVisible():
@@ -29,7 +32,6 @@ class VerboseView:
     if len(currentItems) == 1:
       currentItem = currentItems[0]
       self.updateInterface(currentItem)
-
     else:
       raise RuntimeError("One item must be chosen for showing verbose view!")
 
@@ -59,7 +61,8 @@ class VerboseView:
       self.verboseText = self.ui.itemVerboseTextView.toMarkdown()
     else:
       raise RuntimeError('Unexpected index of tab in TabWidget!')
-    self.presenter.UpdateItem(ViewData(self.itemPK, comment=self.verboseText))
+    if self.isValid():
+      self.presenter.UpdateItem(ViewData(self.itemPK, comment=self.verboseText))
 
   @Slot()
   def hide(self):

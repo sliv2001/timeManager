@@ -13,8 +13,9 @@ class Presenter(QAbstractItemModel):
   _cache: list
   _updatedCache: bool = False
 
-  def __init__(self, view) -> None:
+  def __init__(self, view, settings) -> None:
     super().__init__(view)
+    self.settings = settings
     self.initDatabase()
     self.view = view
     self.priorityHandler = PriorityHandler()
