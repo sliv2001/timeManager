@@ -7,6 +7,7 @@ from timemanager.model.model import Fulfill, Items, Statuses
 from .ViewData import ViewData
 from .Statuses import ModelStatuses, ViewStatuses, ModelFulfillments, AllModelNames
 from .PriorityHandler import PriorityHandler
+from timemanager.plugins.pluginHandler import modifiable_by_plugin
 
 class Presenter(QAbstractItemModel):
 
@@ -22,6 +23,7 @@ class Presenter(QAbstractItemModel):
 
 # ////////////////////////////////////////////////////// Model-side functions ///////////////////////////////////////////////////// #
 
+  @modifiable_by_plugin
   def initDatabase(self):
     self.initStatuses()
 
@@ -33,12 +35,14 @@ class Presenter(QAbstractItemModel):
     except orm.TransactionIntegrityError as e:
       pass
 
+  @modifiable_by_plugin
   @orm.db_session
   def _addFulfill(self, item, statusLine, elapsedTime, dateTime):
     itemEntry = Items[item]
     statusEntry = Statuses.get(name=statusLine)
     fulfill = Fulfill(dateTime=dateTime, item=itemEntry, status=statusEntry, elapsedTime=elapsedTime)
 
+  @modifiable_by_plugin
   @orm.db_session
   def _addItem(self, itemName, statusLine, prevItemPK):
     statusLine = statusLine if not statusLine is None else ModelStatuses.Active
