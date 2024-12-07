@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'mainWindowTMBOBE.ui'
+## Form generated from reading UI file 'mainWindowOCRhrB.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -18,8 +18,9 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QTransform)
 from PySide6.QtWidgets import (QAbstractButton, QAbstractItemView, QApplication, QDialogButtonBox,
     QGridLayout, QGroupBox, QLabel, QMainWindow,
-    QMenuBar, QPlainTextEdit, QSizePolicy, QStatusBar,
-    QTabWidget, QTextEdit, QVBoxLayout, QWidget)
+    QMenuBar, QPlainTextEdit, QSizePolicy, QSplitter,
+    QStatusBar, QTabWidget, QTextEdit, QVBoxLayout,
+    QWidget)
 
 from .CustomListView import CustomListView
 
@@ -80,7 +81,21 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.buttonBox, 3, 0, 1, 1)
 
-        self.itemVerboseGroupBox = QGroupBox(self.centralwidget)
+        self.label = QLabel(self.centralwidget)
+        self.label.setObjectName(u"label")
+
+        self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
+
+        self.splitter = QSplitter(self.centralwidget)
+        self.splitter.setObjectName(u"splitter")
+        self.splitter.setOrientation(Qt.Orientation.Vertical)
+        self.listView = CustomListView(self.splitter)
+        self.listView.setObjectName(u"listView")
+        self.listView.setContextMenuPolicy(Qt.ContextMenuPolicy.ActionsContextMenu)
+        self.listView.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.listView.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
+        self.splitter.addWidget(self.listView)
+        self.itemVerboseGroupBox = QGroupBox(self.splitter)
         self.itemVerboseGroupBox.setObjectName(u"itemVerboseGroupBox")
         self.verticalLayout = QVBoxLayout(self.itemVerboseGroupBox)
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -117,21 +132,9 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.itemVerboseButtonBox)
 
+        self.splitter.addWidget(self.itemVerboseGroupBox)
 
-        self.gridLayout.addWidget(self.itemVerboseGroupBox, 2, 0, 1, 1)
-
-        self.label = QLabel(self.centralwidget)
-        self.label.setObjectName(u"label")
-
-        self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
-
-        self.listView = CustomListView(self.centralwidget)
-        self.listView.setObjectName(u"listView")
-        self.listView.setContextMenuPolicy(Qt.ContextMenuPolicy.ActionsContextMenu)
-        self.listView.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
-        self.listView.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
-
-        self.gridLayout.addWidget(self.listView, 1, 0, 1, 1)
+        self.gridLayout.addWidget(self.splitter, 2, 0, 1, 1)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
@@ -210,11 +213,11 @@ class Ui_MainWindow(object):
 #if QT_CONFIG(shortcut)
         self.chooseRandom.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+R", None))
 #endif // QT_CONFIG(shortcut)
-        self.itemVerboseGroupBox.setTitle(QCoreApplication.translate("MainWindow", u"GroupBox", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.text), QCoreApplication.translate("MainWindow", u"\u0424\u043e\u0440\u043c\u0430\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u044b\u0439 \u0442\u0435\u043a\u0441\u0442", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"\u042d\u0442\u043e \u0441\u043f\u0438\u0441\u043e\u043a \u0434\u0435\u043b, \u043a\u043e\u0442\u043e\u0440\u044b\u0435 \u043d\u0443\u0436\u043d\u043e \u0432\u044b\u043f\u043e\u043b\u043d\u0438\u0442\u044c \u0432 \u0442\u0435\u0447\u0435\u043d\u0438\u0435 \u0434\u043d\u044f:", None))
 #if QT_CONFIG(accessibility)
         self.listView.setAccessibleDescription("")
 #endif // QT_CONFIG(accessibility)
+        self.itemVerboseGroupBox.setTitle(QCoreApplication.translate("MainWindow", u"GroupBox", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.text), QCoreApplication.translate("MainWindow", u"\u0424\u043e\u0440\u043c\u0430\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u044b\u0439 \u0442\u0435\u043a\u0441\u0442", None))
     # retranslateUi
 
