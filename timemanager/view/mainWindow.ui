@@ -31,52 +31,6 @@
       </property>
      </widget>
     </item>
-    <item row="2" column="0">
-     <widget class="QGroupBox" name="itemVerboseGroupBox">
-      <property name="title">
-       <string>GroupBox</string>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <widget class="QTabWidget" name="tabWidget">
-         <property name="currentIndex">
-          <number>0</number>
-         </property>
-         <widget class="QWidget" name="markdown">
-          <attribute name="title">
-           <string notr="true">Markdown</string>
-          </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_2">
-           <item>
-            <widget class="QPlainTextEdit" name="itemVerboseTextEdit"/>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="text">
-          <attribute name="title">
-           <string>Форматированный текст</string>
-          </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_3">
-           <item>
-            <widget class="QTextEdit" name="itemVerboseTextView"/>
-           </item>
-          </layout>
-         </widget>
-        </widget>
-       </item>
-       <item>
-        <widget class="QDialogButtonBox" name="itemVerboseButtonBox">
-         <property name="locale">
-          <locale language="Russian" country="Russia"/>
-         </property>
-         <property name="standardButtons">
-          <set>QDialogButtonBox::StandardButton::Close|QDialogButtonBox::StandardButton::Save</set>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
     <item row="0" column="0">
      <widget class="QLabel" name="label">
       <property name="text">
@@ -84,20 +38,72 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="0">
-     <widget class="CustomListView" name="listView">
-      <property name="contextMenuPolicy">
-       <enum>Qt::ContextMenuPolicy::ActionsContextMenu</enum>
+    <item row="2" column="0">
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation">
+       <enum>Qt::Orientation::Vertical</enum>
       </property>
-      <property name="accessibleDescription">
-       <string/>
+      <property name="childrenCollapsible">
+       <bool>false</bool>
       </property>
-      <property name="editTriggers">
-       <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
-      </property>
-      <property name="selectionMode">
-       <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>
-      </property>
+      <widget class="CustomListView" name="listView">
+       <property name="contextMenuPolicy">
+        <enum>Qt::ContextMenuPolicy::ActionsContextMenu</enum>
+       </property>
+       <property name="accessibleDescription">
+        <string/>
+       </property>
+       <property name="editTriggers">
+        <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+       </property>
+       <property name="selectionMode">
+        <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>
+       </property>
+      </widget>
+      <widget class="QGroupBox" name="itemVerboseGroupBox">
+       <property name="title">
+        <string>GroupBox</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QTabWidget" name="tabWidget">
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="markdown">
+           <attribute name="title">
+            <string notr="true">Markdown</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_2">
+            <item>
+             <widget class="QPlainTextEdit" name="itemVerboseTextEdit"/>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="text">
+           <attribute name="title">
+            <string>Форматированный текст</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_3">
+            <item>
+             <widget class="QTextEdit" name="itemVerboseTextView"/>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+        <item>
+         <widget class="QDialogButtonBox" name="itemVerboseButtonBox">
+          <property name="locale">
+           <locale language="Russian" country="Russia"/>
+          </property>
+          <property name="standardButtons">
+           <set>QDialogButtonBox::StandardButton::Close|QDialogButtonBox::StandardButton::Save</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
     </item>
    </layout>
