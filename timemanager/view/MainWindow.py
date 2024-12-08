@@ -75,6 +75,7 @@ class MainWindow(QMainWindow):
     self.windowClosed.connect(self.windowClosing)
     self.windowClosed.connect(self.settings.saveSettings)
     self.settings.addSetting('view/mainWindow/geometry', self.normalGeometry, self.setGeometry)
+    self.settings.addSetting('view/mainWindow/verbose_view/geometry', self.ui.splitter.sizes, self.ui.splitter.setSizes)
     self.settings.addSetting('view/mainWindow/fullscreen', self.isFullScreen, self.setFullScreen)
     self.windowInitialized.emit()
 
