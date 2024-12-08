@@ -43,6 +43,9 @@
       <property name="orientation">
        <enum>Qt::Orientation::Vertical</enum>
       </property>
+      <property name="childrenCollapsible">
+       <bool>false</bool>
+      </property>
       <widget class="CustomListView" name="listView">
        <property name="contextMenuPolicy">
         <enum>Qt::ContextMenuPolicy::ActionsContextMenu</enum>

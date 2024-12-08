@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'mainWindowOCRhrB.ui'
+## Form generated from reading UI file 'mainWindoweytnnv.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -89,6 +89,7 @@ class Ui_MainWindow(object):
         self.splitter = QSplitter(self.centralwidget)
         self.splitter.setObjectName(u"splitter")
         self.splitter.setOrientation(Qt.Orientation.Vertical)
+        self.splitter.setChildrenCollapsible(False)
         self.listView = CustomListView(self.splitter)
         self.listView.setObjectName(u"listView")
         self.listView.setContextMenuPolicy(Qt.ContextMenuPolicy.ActionsContextMenu)
