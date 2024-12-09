@@ -23,7 +23,6 @@ class Presenter(QAbstractItemModel):
 
 # ////////////////////////////////////////////////////// Model-side functions ///////////////////////////////////////////////////// #
 
-  @modifiable_by_plugin
   def initDatabase(self):
     self.initStatuses()
 
@@ -35,14 +34,12 @@ class Presenter(QAbstractItemModel):
     except orm.TransactionIntegrityError as e:
       pass
 
-  @modifiable_by_plugin
   @orm.db_session
   def _addFulfill(self, item, statusLine, elapsedTime, dateTime):
     itemEntry = Items[item]
     statusEntry = Statuses.get(name=statusLine)
     fulfill = Fulfill(dateTime=dateTime, item=itemEntry, status=statusEntry, elapsedTime=elapsedTime)
 
-  @modifiable_by_plugin
   @orm.db_session
   def _addItem(self, itemName, statusLine, prevItemPK):
     statusLine = statusLine if not statusLine is None else ModelStatuses.Active
@@ -204,6 +201,7 @@ class Presenter(QAbstractItemModel):
       return QModelIndex()
     return self.createIndex(row, column, self._getCache()[row].itemPK)
 
+  @modifiable_by_plugin
   def data(self, index: QModelIndex | QPersistentModelIndex, role: int = ...) -> Any:
     # See this for roles description:
     # https://doc.qt.io/qt-6/qt.html#ItemDataRole-enum
@@ -222,11 +220,13 @@ class Presenter(QAbstractItemModel):
     else:
       return None
 
+  @modifiable_by_plugin
   def flags(self, index: QModelIndex | QPersistentModelIndex) -> Qt.ItemFlag:
     # See this for item flags description:
     # https://doc.qt.io/qt-6/qt.html#ItemFlag-enum
     return Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsUserCheckable | Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemNeverHasChildren
 
+  @modifiable_by_plugin
   def setData(self, index: QModelIndex | QPersistentModelIndex, value: Any, role: int = ...) -> bool:
     if role == Qt.ItemDataRole.CheckStateRole and value != Qt.CheckState.PartiallyChecked.value:
       self._updateItem(ViewData(index.internalId(),
