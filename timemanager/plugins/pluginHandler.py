@@ -1,4 +1,4 @@
-import os, sys
+import os
 import importlib, importlib.util
 from timemanager.utils.settings import Settings
 
@@ -25,8 +25,10 @@ class pluginHandler:
 
   collectedPlugins = {}
 
-  def __init__(self, settings: Settings) -> None:
+  def __init__(self, settings: Settings, view, presenter) -> None:
     self.settings = settings
+    self.view = view
+    self.presenter = presenter
     self.updateAccessiblePlugins()
 
   def updateAccessiblePlugins(self):
@@ -41,5 +43,7 @@ class pluginHandler:
           spec.loader.exec_module(mod)
           # sys.modules[module_name] = mod
           self.collectedPlugins[module_name] = mod
+          mod.presenterUpdate(self.presenter)
+          mod.viewUpdate(self.view)
       except Exception as e:
         print(e)
