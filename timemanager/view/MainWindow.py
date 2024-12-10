@@ -12,6 +12,7 @@ from timemanager.view.VerboseView import VerboseView
 from timemanager.presenter.Statuses import ViewStatuses
 from timemanager.view.ViewUpdateTimers import ViewUpdateTimers
 from timemanager.utils.settings import Settings
+from timemanager.plugins.pluginHandler import pluginHandler
 
 class MainWindow(QMainWindow):
 
@@ -27,6 +28,7 @@ class MainWindow(QMainWindow):
     self.presenter = Presenter(self, settings)
     self.ui.listView.setModel(self.presenter)
     self.verboseView = VerboseView(self.ui, self.presenter)
+    self.pluginHandler = pluginHandler(settings, self, self.presenter)
 
     self.timers = ViewUpdateTimers(self.ui, self.presenter)
     self.timers.setUpdateTime(time(hour=0, minute=0, second=0))
