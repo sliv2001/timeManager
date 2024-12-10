@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta, time
-from random import randint
 
 from PySide6.QtCore import Qt, Signal, Slot, QModelIndex, QItemSelectionModel
 from PySide6.QtWidgets import QMainWindow, QWidget, QAbstractButton, QPushButton, QDialogButtonBox, QInputDialog
@@ -35,9 +34,6 @@ class MainWindow(QMainWindow):
     closeButton = QPushButton(text="Закрыть", parent=self.ui.buttonBox)
     closeButton.setObjectName("closeButton")
     closeButton.clicked.connect(slot=self.closeButton_clicked)
-    randomButton = QPushButton(text="Случайный", parent=self.ui.buttonBox)
-    randomButton.setObjectName("randomButton")
-    randomButton.clicked.connect(slot=self.ui.chooseRandom.trigger)
     newItemButton = QPushButton(text="Создать", parent=self.ui.buttonBox)
     newItemButton.clicked.connect(slot=self.ui.addItem.trigger)
     newItemButton.setObjectName("newItemButton")
@@ -49,11 +45,9 @@ class MainWindow(QMainWindow):
     downButton.setObjectName("upButton")
     self.ui.buttonBox.addButton(closeButton, QDialogButtonBox.ButtonRole.DestructiveRole)
     self.ui.buttonBox.addButton(newItemButton, QDialogButtonBox.ButtonRole.ActionRole)
-    self.ui.buttonBox.addButton(randomButton, QDialogButtonBox.ButtonRole.ActionRole)
     self.ui.buttonBox.addButton(upButton, QDialogButtonBox.ButtonRole.ActionRole)
     self.ui.buttonBox.addButton(downButton, QDialogButtonBox.ButtonRole.ActionRole)
 
-    self.ui.chooseRandom.triggered.connect(slot=self.chooseRandomTriggered)
     self.ui.removeItem.triggered.connect(slot=self.deleteTriggered)
     self.ui.addItem.triggered.connect(slot=self.addTriggered)
     self.ui.verboseItem.triggered.connect(slot=self.verboseView.show)
@@ -68,7 +62,6 @@ class MainWindow(QMainWindow):
     self.ui.listView.addAction(self.ui.checkItem)
     self.ui.listView.addAction(self.ui.upItem)
     self.ui.listView.addAction(self.ui.downItem)
-    self.ui.listView.addAction(self.ui.chooseRandom)
 
     self.enableItemEditActions()
 
@@ -99,11 +92,6 @@ class MainWindow(QMainWindow):
   @Slot()
   def itemSelectionChanged(self):
     self.enableItemEditActions()
-
-  @Slot()
-  def chooseRandomTriggered(self):
-    rand = randint(0, self.presenter.rowCount()-1)
-    self.ui.listView.selectionModel().select(self.presenter.index(rand, 0), QItemSelectionModel.SelectionFlag.ClearAndSelect)
 
   @Slot()
   def deleteTriggered(self):
@@ -153,8 +141,8 @@ class MainWindow(QMainWindow):
     self.ui.checkItem.setEnabled(lenCI == 1)
     self.ui.verboseItem.setEnabled(lenCI == 1)
     self.ui.checkItem.setChecked(lenCI == 1 and currentItems[0].data(role=Qt.ItemDataRole.CheckStateRole) == Qt.CheckState.Checked)
+    self.ui.buttonBox.buttons()[2].setEnabled(lenCI == 1)
     self.ui.buttonBox.buttons()[3].setEnabled(lenCI == 1)
-    self.ui.buttonBox.buttons()[4].setEnabled(lenCI == 1)
 
   def createNewItem(self):
     newItemName, res = QInputDialog.getText(self, 'Новый пункт', 'Название нового пункта: ')

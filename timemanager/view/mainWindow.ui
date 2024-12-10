@@ -244,20 +244,6 @@
     <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
-  <action name="chooseRandom">
-   <property name="text">
-    <string>Случайный элемент</string>
-   </property>
-   <property name="toolTip">
-    <string>Предложить случайный элемент</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+R</string>
-   </property>
-   <property name="menuRole">
-    <enum>QAction::MenuRole::ApplicationSpecificRole</enum>
-   </property>
-  </action>
  </widget>
  <customwidgets>
   <customwidget>
