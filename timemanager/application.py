@@ -7,6 +7,8 @@ from timemanager.view.MainWindow import MainWindow
 class Application(QApplication):
   settings: Settings
   presenter: Presenter
+  view: MainWindow
+  pluginHandler: pluginHandler
 
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
@@ -14,4 +16,5 @@ class Application(QApplication):
     self.presenter = Presenter(settings=self.settings)
     self.view = MainWindow(self.settings, presenter=self.presenter)
     self.presenter.view = self.view
+    self.pluginHandler = pluginHandler(self)
     self.view.show()
