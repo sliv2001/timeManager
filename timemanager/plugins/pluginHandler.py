@@ -25,25 +25,24 @@ class pluginHandler:
 
   collectedPlugins = {}
 
-  def __init__(self, settings: Settings, view, presenter) -> None:
-    self.settings = settings
-    self.view = view
-    self.presenter = presenter
+  def __init__(self, app) -> None:
+    self.app = app
     self.updateAccessiblePlugins()
 
   def updateAccessiblePlugins(self):
     path = os.path.dirname(__file__)
     for dirpath, dirnames, filenames in os.walk(path):
-      if dirpath == path: continue
-      try:
-        module_name = dirpath.split('/')[-1]
-        if any([filename.endswith('.py') and filename.startswith(module_name) for filename in filenames]):
+      if dirpath == path:
+        continue
+      module_name = dirpath.split('/')[-1]
+      if any([filename.endswith('.py') and filename.startswith(module_name) for filename in filenames]):
+        try:
           spec = importlib.util.spec_from_file_location('module_name', dirpath+'/'+module_name+'.py')
           mod = importlib.util.module_from_spec(spec)
           spec.loader.exec_module(mod)
-          # sys.modules[module_name] = mod
-          self.collectedPlugins[module_name] = mod
-          mod.presenterUpdate(self.presenter)
-          mod.viewUpdate(self.view)
-      except Exception as e:
-        print(e)
+        except Exception as e:
+          print(e)
+          return
+        plugin = getattr(mod, module_name)(self.app)
+        self.collectedPlugins[module_name] = plugin
+        plugin.appUpdate()
