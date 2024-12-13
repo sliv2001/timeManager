@@ -28,7 +28,6 @@ class MainWindow(QMainWindow):
     self.presenter = presenter
     self.ui.listView.setModel(self.presenter)
     self.verboseView = VerboseView(self.ui, self.presenter)
-    self.pluginHandler = pluginHandler(settings, self, self.presenter)
 
     self.timers = ViewUpdateTimers(self.ui, self.presenter)
     self.timers.setUpdateTime(time(hour=0, minute=0, second=0))
