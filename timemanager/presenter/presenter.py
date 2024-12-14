@@ -7,13 +7,14 @@ from timemanager.model.model import Fulfill, Items, Statuses
 from .ViewData import ViewData
 from .Statuses import ModelStatuses, ViewStatuses, ModelFulfillments, AllModelNames
 from .PriorityHandler import PriorityHandler
+from timemanager.plugins.pluginHandler import modifiable_by_plugin
 
 class Presenter(QAbstractItemModel):
 
   _cache: list
   _updatedCache: bool = False
 
-  def __init__(self, view, settings) -> None:
+  def __init__(self, settings, view = None) -> None:
     super().__init__(view)
     self.settings = settings
     self.initDatabase()
@@ -200,6 +201,7 @@ class Presenter(QAbstractItemModel):
       return QModelIndex()
     return self.createIndex(row, column, self._getCache()[row].itemPK)
 
+  @modifiable_by_plugin
   def data(self, index: QModelIndex | QPersistentModelIndex, role: int = ...) -> Any:
     # See this for roles description:
     # https://doc.qt.io/qt-6/qt.html#ItemDataRole-enum
@@ -218,11 +220,13 @@ class Presenter(QAbstractItemModel):
     else:
       return None
 
+  @modifiable_by_plugin
   def flags(self, index: QModelIndex | QPersistentModelIndex) -> Qt.ItemFlag:
     # See this for item flags description:
     # https://doc.qt.io/qt-6/qt.html#ItemFlag-enum
     return Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsUserCheckable | Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemNeverHasChildren
 
+  @modifiable_by_plugin
   def setData(self, index: QModelIndex | QPersistentModelIndex, value: Any, role: int = ...) -> bool:
     if role == Qt.ItemDataRole.CheckStateRole and value != Qt.CheckState.PartiallyChecked.value:
       self._updateItem(ViewData(index.internalId(),

@@ -12,6 +12,7 @@ from timemanager.view.VerboseView import VerboseView
 from timemanager.presenter.Statuses import ViewStatuses
 from timemanager.view.ViewUpdateTimers import ViewUpdateTimers
 from timemanager.utils.settings import Settings
+from timemanager.plugins.pluginHandler import pluginHandler
 
 class MainWindow(QMainWindow):
 
@@ -19,12 +20,12 @@ class MainWindow(QMainWindow):
   windowInitialized = Signal(None, name = 'windowInitialized')
   windowClosed = Signal(None, name = 'windowClosed')
 
-  def __init__(self, settings: Settings, parent: QWidget | None = ..., flags: Qt.WindowType = ...) -> None:
+  def __init__(self, settings: Settings, presenter: Presenter, parent: QWidget | None = ..., flags: Qt.WindowType = ...) -> None:
     super(MainWindow, self).__init__()
     self.settings = settings
     self.ui = Ui_MainWindow()
     self.ui.setupUi(self)
-    self.presenter = Presenter(self, settings)
+    self.presenter = presenter
     self.ui.listView.setModel(self.presenter)
     self.verboseView = VerboseView(self.ui, self.presenter)
 
