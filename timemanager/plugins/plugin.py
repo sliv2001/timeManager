@@ -2,8 +2,6 @@ from timemanager.presenter.presenter import Presenter
 from timemanager.view.MainWindow import MainWindow
 
 class plugin:
-  view: MainWindow
-  presenter: Presenter
 
   def __init__(self, app) -> None:
     self.app = app
