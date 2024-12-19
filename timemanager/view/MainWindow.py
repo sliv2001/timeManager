@@ -8,7 +8,7 @@ from PySide6.QtGui import QCloseEvent
 from timemanager.view.Ui_mainWindow import Ui_MainWindow
 from timemanager.presenter.presenter import Presenter
 from timemanager.presenter.ViewData import ViewData
-from timemanager.view.VerboseView import VerboseView
+from timemanager.view.CustomGroupBox import CustomGroupBox
 from timemanager.presenter.Statuses import ViewStatuses
 from timemanager.view.ViewUpdateTimers import ViewUpdateTimers
 from timemanager.utils.settings import Settings

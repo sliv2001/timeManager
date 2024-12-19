@@ -60,7 +60,7 @@
         <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>
        </property>
       </widget>
-      <widget class="QGroupBox" name="itemVerboseGroupBox">
+      <widget class="CustomGroupBox" name="itemVerboseGroupBox">
        <property name="title">
         <string>GroupBox</string>
        </property>
@@ -264,6 +264,12 @@
    <class>CustomListView</class>
    <extends>QListView</extends>
    <header location="global">.CustomListView.h</header>
+  </customwidget>
+  <customwidget>
+   <class>CustomGroupBox</class>
+   <extends>QGroupBox</extends>
+   <header location="global">.CustomGroupBox</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>
