@@ -27,7 +27,7 @@ class MainWindow(QMainWindow):
     self.ui.setupUi(self)
     self.presenter = presenter
     self.ui.listView.setModel(self.presenter)
-    self.verboseView = VerboseView(self.ui, self.presenter)
+    self.ui.verboseView.setUp(self.ui, self.presenter)
 
     self.timers = ViewUpdateTimers(self.ui, self.presenter)
     self.timers.setUpdateTime(time(hour=0, minute=0, second=0))
@@ -56,11 +56,10 @@ class MainWindow(QMainWindow):
     self.ui.chooseRandom.triggered.connect(slot=self.chooseRandomTriggered)
     self.ui.removeItem.triggered.connect(slot=self.deleteTriggered)
     self.ui.addItem.triggered.connect(slot=self.addTriggered)
-    self.ui.verboseItem.triggered.connect(slot=self.verboseView.show)
+    self.ui.verboseItem.triggered.connect(slot=self.ui.verboseView.show)
     self.ui.checkItem.triggered.connect(slot=self.checkTriggered)
     self.ui.upItem.triggered.connect(slot=self.upItemTriggered)
     self.ui.downItem.triggered.connect(slot=self.downItemTriggered)
-    self.ui.verboseItem.triggered.connect(slot=self.verboseView.show)
     self.ui.listView.selectionModel().selectionChanged.connect(slot=self.itemSelectionChanged)
     self.ui.listView.addAction(self.ui.addItem)
     self.ui.listView.addAction(self.ui.removeItem)
@@ -182,4 +181,4 @@ class MainWindow(QMainWindow):
     self.presenter.SetItemAfter(currentItem, modelIndex)
 
   def saveBeforeExit(self):
-    self.verboseView.save()
+    self.ui.verboseView.save()

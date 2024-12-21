@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'mainWindowLrODvH.ui'
+## Form generated from reading UI file 'mainWindowgIfaIz.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -21,8 +21,8 @@ from PySide6.QtWidgets import (QAbstractButton, QAbstractItemView, QApplication,
     QPlainTextEdit, QSizePolicy, QSplitter, QStatusBar,
     QTabWidget, QTextEdit, QVBoxLayout, QWidget)
 
+from .CustomGroupBox import CustomGroupBox
 from .CustomListView import CustomListView
-from customgroupbox import CustomGroupBox
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -96,11 +96,11 @@ class Ui_MainWindow(object):
         self.listView.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.listView.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
         self.splitter.addWidget(self.listView)
-        self.itemVerboseGroupBox = CustomGroupBox(self.splitter)
-        self.itemVerboseGroupBox.setObjectName(u"itemVerboseGroupBox")
-        self.verticalLayout = QVBoxLayout(self.itemVerboseGroupBox)
+        self.verboseView = CustomGroupBox(self.splitter)
+        self.verboseView.setObjectName(u"verboseView")
+        self.verticalLayout = QVBoxLayout(self.verboseView)
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.tabWidget = QTabWidget(self.itemVerboseGroupBox)
+        self.tabWidget = QTabWidget(self.verboseView)
         self.tabWidget.setObjectName(u"tabWidget")
         self.markdown = QWidget()
         self.markdown.setObjectName(u"markdown")
@@ -126,14 +126,14 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.tabWidget)
 
-        self.itemVerboseButtonBox = QDialogButtonBox(self.itemVerboseGroupBox)
+        self.itemVerboseButtonBox = QDialogButtonBox(self.verboseView)
         self.itemVerboseButtonBox.setObjectName(u"itemVerboseButtonBox")
         self.itemVerboseButtonBox.setLocale(QLocale(QLocale.Russian, QLocale.Russia))
         self.itemVerboseButtonBox.setStandardButtons(QDialogButtonBox.StandardButton.Close|QDialogButtonBox.StandardButton.Save)
 
         self.verticalLayout.addWidget(self.itemVerboseButtonBox)
 
-        self.splitter.addWidget(self.itemVerboseGroupBox)
+        self.splitter.addWidget(self.verboseView)
 
         self.gridLayout.addWidget(self.splitter, 2, 0, 1, 1)
 
@@ -218,7 +218,7 @@ class Ui_MainWindow(object):
 #if QT_CONFIG(accessibility)
         self.listView.setAccessibleDescription("")
 #endif // QT_CONFIG(accessibility)
-        self.itemVerboseGroupBox.setTitle(QCoreApplication.translate("MainWindow", u"GroupBox", None))
+        self.verboseView.setTitle(QCoreApplication.translate("MainWindow", u"GroupBox", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.text), QCoreApplication.translate("MainWindow", u"\u0424\u043e\u0440\u043c\u0430\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u044b\u0439 \u0442\u0435\u043a\u0441\u0442", None))
     # retranslateUi
 
