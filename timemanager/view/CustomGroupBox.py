@@ -9,10 +9,8 @@ class CustomGroupBox(QGroupBox):
   verboseText: str = ""
   presenter: Presenter
 
-  def __init__(self, *args, **kwargs):
+  def __init__(self, ui, presenter, *args, **kwargs):
     super().__init__(*args, **kwargs)
-
-  def setUp(self, ui, presenter):
     self.ui = ui
     self.presenter = presenter
     self.ui.itemVerboseButtonBox.button(QDialogButtonBox.StandardButton.Close).setText("Скрыть")
@@ -27,7 +25,7 @@ class CustomGroupBox(QGroupBox):
 
   @Slot()
   def show(self):
-    if self.isVisible():
+    if self.ui.itemVerboseGroupBox.isVisible():
       self.save()
     currentItems = self.ui.listView.selectedIndexes()
     if len(currentItems) == 1:
@@ -35,7 +33,6 @@ class CustomGroupBox(QGroupBox):
       self.updateInterface(currentItem)
     else:
       raise RuntimeError("One item must be chosen for showing verbose view!")
-    super().show()
 
   def updateInterface(self, currentItem: QModelIndex):
       currentItemData = self.presenter.GetItem(currentItem.internalId())
@@ -45,9 +42,10 @@ class CustomGroupBox(QGroupBox):
       self._drawInterface()
 
   def _drawInterface(self):
-    self.setTitle(self.name)
-    self.ui.itemVerboseTextEdit.setPlainText(self.verboseText)
-    self.ui.itemVerboseTextView.setMarkdown(self.ui.itemVerboseTextEdit.toPlainText())
+      self.ui.itemVerboseGroupBox.setTitle(self.name)
+      self.ui.itemVerboseTextEdit.setPlainText(self.verboseText)
+      self.ui.itemVerboseTextView.setMarkdown(self.ui.itemVerboseTextEdit.toPlainText())
+      self.ui.itemVerboseGroupBox.show()
 
   @Slot()
   def saveAndHide(self):
@@ -64,6 +62,10 @@ class CustomGroupBox(QGroupBox):
       raise RuntimeError('Unexpected index of tab in TabWidget!')
     if self.isValid():
       self.presenter.UpdateItem(ViewData(self.itemPK, comment=self.verboseText))
+
+  @Slot()
+  def hide(self):
+    self.ui.itemVerboseGroupBox.hide()
 
   @Slot()
   def switchTextFormat(self, newTab: int):

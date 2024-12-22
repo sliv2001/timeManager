@@ -60,7 +60,7 @@
         <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>
        </property>
       </widget>
-      <widget class="CustomGroupBox" name="verboseView">
+      <widget class="CustomGroupBox" name="itemVerboseGroupBox">
        <property name="title">
         <string>GroupBox</string>
        </property>
