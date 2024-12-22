@@ -1,16 +1,17 @@
 from PySide6.QtCore import Slot, QModelIndex
-from PySide6.QtWidgets import QDialogButtonBox, QGroupBox
+from PySide6.QtWidgets import QDialogButtonBox
+from timemanager.view.Ui_mainWindow import Ui_MainWindow
 from timemanager.presenter.presenter import Presenter
 from timemanager.presenter.ViewData import ViewData
 
-class CustomGroupBox(QGroupBox):
+class VerboseView:
   itemPK: int = -1
   name: str = ""
   verboseText: str = ""
+  ui: Ui_MainWindow
   presenter: Presenter
 
-  def __init__(self, ui, presenter, *args, **kwargs):
-    super().__init__(*args, **kwargs)
+  def __init__(self, ui, presenter):
     self.ui = ui
     self.presenter = presenter
     self.ui.itemVerboseButtonBox.button(QDialogButtonBox.StandardButton.Close).setText("Скрыть")

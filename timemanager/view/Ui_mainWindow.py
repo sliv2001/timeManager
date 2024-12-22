@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'mainWindowLrODvH.ui'
+## Form generated from reading UI file 'mainWindoweytnnv.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -17,12 +17,12 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
 from PySide6.QtWidgets import (QAbstractButton, QAbstractItemView, QApplication, QDialogButtonBox,
-    QGridLayout, QLabel, QMainWindow, QMenuBar,
-    QPlainTextEdit, QSizePolicy, QSplitter, QStatusBar,
-    QTabWidget, QTextEdit, QVBoxLayout, QWidget)
+    QGridLayout, QGroupBox, QLabel, QMainWindow,
+    QMenuBar, QPlainTextEdit, QSizePolicy, QSplitter,
+    QStatusBar, QTabWidget, QTextEdit, QVBoxLayout,
+    QWidget)
 
 from .CustomListView import CustomListView
-from customgroupbox import CustomGroupBox
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -96,7 +96,7 @@ class Ui_MainWindow(object):
         self.listView.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.listView.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
         self.splitter.addWidget(self.listView)
-        self.itemVerboseGroupBox = CustomGroupBox(self.splitter)
+        self.itemVerboseGroupBox = QGroupBox(self.splitter)
         self.itemVerboseGroupBox.setObjectName(u"itemVerboseGroupBox")
         self.verticalLayout = QVBoxLayout(self.itemVerboseGroupBox)
         self.verticalLayout.setObjectName(u"verticalLayout")
