@@ -1,9 +1,11 @@
+from PySide6.QtCore import QObject
 from timemanager.presenter.presenter import Presenter
 from timemanager.view.MainWindow import MainWindow
 
-class plugin:
+class plugin(QObject):
 
   def __init__(self, app) -> None:
+    super().__init__(app)
     self.app = app
 
   def requiresModelUpdate(self) -> bool:
