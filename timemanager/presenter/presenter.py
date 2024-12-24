@@ -208,11 +208,6 @@ class Presenter(QAbstractItemModel):
     # https://doc.qt.io/qt-6/qt.html#ItemDataRole-enum
     if role == Qt.ItemDataRole.DisplayRole:
       return self._getCache()[index.row()].itemName
-    elif role == Qt.ItemDataRole.BackgroundRole:
-      if self._getCache()[index.row()].status == ViewStatuses.Outdated:
-        return QColor("Red")
-      else:
-        return None
     elif role == Qt.ItemDataRole.CheckStateRole:
       if self._getCache()[index.row()].status == ViewStatuses.Done:
         return Qt.CheckState.Checked
