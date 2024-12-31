@@ -11,7 +11,11 @@ _mod_funcs = {}
 def modifiable_by_plugin(func):
   def inner(*args, **kwargs):
     if func.__name__ in _mod_funcs.keys():
-      _mod_funcs[func.__name__](*args, **kwargs)
+      res = _mod_funcs[func.__name__](*args, **kwargs)
+    else:
+      res = None
+    if not res is None:
+      return res
     return func(*args, **kwargs)
   return inner
 
