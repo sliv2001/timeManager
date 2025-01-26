@@ -1,10 +1,11 @@
 from PySide6.QtCore import QObject
 from timemanager.presenter.presenter import Presenter
 from timemanager.view.MainWindow import MainWindow
+from timemanager.application import Application
 
 class plugin(QObject):
 
-  def __init__(self, app) -> None:
+  def __init__(self, app: Application) -> None:
     super().__init__(app)
     self.app = app
 
