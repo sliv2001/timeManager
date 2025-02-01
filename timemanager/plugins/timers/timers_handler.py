@@ -1,4 +1,4 @@
-from PySide6.QtCore import QTimer, Slot, QObject
+from PySide6.QtCore import QTimer, Slot, Signal, QObject
 from timemanager.plugins.plugin import plugin
 
 class _InternalTimer:
@@ -23,6 +23,7 @@ class TimersHandler(QObject):
   _entries: list[_InternalTimer]
   _eventTimer: QTimer
   _scale: int = 10
+  timerFinished = Signal(name='timerFinished')
 
   def __init__(self, parent = ...):
     super().__init__(parent)
@@ -45,7 +46,7 @@ class TimersHandler(QObject):
     self._entries.append(_InternalTimer(IntID, timeout=timeout, scale=self._scale))
 
   def finishEntry(self, entry: _InternalTimer):
-    self.parent().finishEntry(entry.IntID)
+    self.timerFinished.emit(entry.IntID)
 
   def update(self):
     self.parent().updateInterface([(entry.IntID, entry.remain / entry.timeout) for entry in self._entries])
