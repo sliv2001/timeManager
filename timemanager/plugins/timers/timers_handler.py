@@ -1,35 +1,35 @@
+from datetime import datetime, timedelta
 from PySide6.QtCore import QTimer, Slot, Signal, QObject
 from timemanager.plugins.plugin import plugin
 
 class _InternalTimer:
   IntID: int
-  remain: int
-  timeout: int
-  scale: int # Ticks per second; >=1, <=1000
+  endTime: datetime
+  outdated: bool
 
-  def __init__(self, IntID, timeout, scale = 1): # remain in seconds
+  def __init__(self, IntID, timeout): # remain in seconds
     self.IntID = IntID
-    self.remain = timeout * scale
-    self.timeout = timeout * scale
-    self.scale = scale
+    self.endTime = datetime.now()+timedelta(seconds=timeout)
+    self.timeout = timeout
+    self.outdated = False
 
   def tick(self):
-    self.remain -= 1 * self.scale
-    if self.remain == 0:
+    if self.endTime <= datetime.now():
+      self.outdated = True
       return True
     return False
 
 class TimersHandler(QObject):
   _entries: list[_InternalTimer]
   _eventTimer: QTimer
-  _scale: int = 10
-  timerFinished = Signal(name='timerFinished')
+  _scale: int = 1
+  timerFinished = Signal(int, name='timerFinished', arguments=['intID'])
 
   def __init__(self, parent = ...):
     super().__init__(parent)
     self._entries = []
     self._eventTimer = QTimer(self)
-    self._eventTimer.setInterval(100)
+    self._eventTimer.setInterval(1000 // self._scale)
     self._eventTimer.timeout.connect(self.tick)
     self.stop()
 
@@ -43,19 +43,16 @@ class TimersHandler(QObject):
 
   def createEntry(self, IntID, timeout):
     self.start()
-    self._entries.append(_InternalTimer(IntID, timeout=timeout, scale=self._scale))
+    self._entries.append(_InternalTimer(IntID, timeout=timeout))
 
   def finishEntry(self, entry: _InternalTimer):
     self.timerFinished.emit(entry.IntID)
-
-  def update(self):
-    self.parent().updateInterface([(entry.IntID, entry.remain / entry.timeout) for entry in self._entries])
 
   @Slot()
   def tick(self):
     finished = [entry for entry in self._entries if entry.tick()]
     for entry in finished:
       self.finishEntry(entry)
-    self._entries = [entry for entry in self._entries if entry.remain > 0]
+    self._entries = [entry for entry in self._entries if not entry.outdated]
     if not self._entries:
       self.stop()
