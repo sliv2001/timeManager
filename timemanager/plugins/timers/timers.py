@@ -30,7 +30,7 @@ class timers(plugin):
         done = self.app.presenter._getCache()[row].status == ViewStatuses.Done
         if not done:
           continue
-        timeout = self.app.presenter.GetItem(intID).timeout
+        timeout = 900
         self.startTheTimer(row, timeout)
 
   @Slot()
