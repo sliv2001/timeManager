@@ -169,7 +169,8 @@ class Presenter(QAbstractItemModel):
     self._updateItem(item)
     if not row is None:
       self._updatedCache = False
-      self.dataChanged.emit(row, row, [Qt.ItemDataRole.CheckStateRole, Qt.ItemDataRole.DisplayRole])
+      index = self.index(row, 0)
+      self.dataChanged.emit(index, index, [Qt.ItemDataRole.CheckStateRole, Qt.ItemDataRole.DisplayRole])
 
   def UpdateItems(self, items: list[ViewData]):
     self._updateItems(items)
