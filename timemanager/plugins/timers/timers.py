@@ -35,18 +35,22 @@ class timers(plugin):
 
   @Slot()
   def timerFinished(self, intID: int):
-    index = self.app.presenter.createIndex(intID, 0)
-    self.app.presenter._updateItem(ViewData(index.internalId(),
-                                            status=ViewStatuses.Done,
-                                            dateTime=datetime.now(),
-                                            elapsedTime=15*60))
-    self.app.presenter.dataChanged.emit(index, index, [Qt.ItemDataRole.CheckStateRole])
-    print('finished entry', intID)
+    self.finishTheTimer(intID)
 
 # ///////////////////////////////////////////////////////////// Timers //////////////////////////////////////////////////////////// #
 
   def startTheTimer(self, row: int, timeout: int):
     self.timers_handler.createEntry(row, timeout)
+    print('started entry', row)
+
+  def finishTheTimer(self, intID):
+    index = self.app.presenter.createIndex(intID, 0)
+    self.app.presenter._updateItem(ViewData(index.internalId(),
+                                          status=ViewStatuses.Done,
+                                          dateTime=datetime.now(),
+                                          elapsedTime=15*60))
+    self.app.presenter.dataChanged.emit(index, index, [Qt.ItemDataRole.CheckStateRole])
+    print('finished entry', intID)
 
 # ///////////////////////////////////////////////////// New Presenter Features //////////////////////////////////////////////////// #
 
