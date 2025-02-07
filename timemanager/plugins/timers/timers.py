@@ -44,11 +44,10 @@ class timers(plugin):
     print('started entry', row)
 
   def finishTheTimer(self, intID):
-    index = self.app.presenter.createIndex(intID, 0)
-    self.app.presenter._updateItem(ViewData(index.internalId(),
-                                          status=ViewStatuses.Done,
-                                          dateTime=datetime.now(),
-                                          elapsedTime=15*60))
+    self.app.presenter._updateItem(ViewData(self.app.presenter._getCache()[intID].itemPK,
+                                            status=ViewStatuses.Done,
+                                            dateTime=datetime.now(),
+                                            elapsedTime=15*60))
     self.app.presenter.dataChanged.emit(index, index, [Qt.ItemDataRole.CheckStateRole])
     print('finished entry', intID)
 
