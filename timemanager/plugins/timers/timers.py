@@ -26,7 +26,6 @@ class timers(plugin):
   def dataChanged(self, begin: QModelIndex, end: QModelIndex, roles: list[int]):
     if Qt.ItemDataRole.CheckStateRole in roles:
       for row in range(begin.row(), end.row()+1): # Because if (1, 1), we need to process it
-        intID = self.app.presenter.index(row, 0).internalId()
         done = self.app.presenter._getCache()[row].status == ViewStatuses.Done
         if not done:
           continue
@@ -34,8 +33,8 @@ class timers(plugin):
         self.startTheTimer(row, timeout)
 
   @Slot()
-  def timerFinished(self, intID: int):
-    self.finishTheTimer(intID)
+  def timerFinished(self, row: int):
+    self.finishTheTimer(row)
 
 # ///////////////////////////////////////////////////////////// Timers //////////////////////////////////////////////////////////// #
 
@@ -43,13 +42,14 @@ class timers(plugin):
     self.timers_handler.createEntry(row, timeout)
     print('started entry', row)
 
-  def finishTheTimer(self, intID):
-    self.app.presenter._updateItem(ViewData(self.app.presenter._getCache()[intID].itemPK,
+  def finishTheTimer(self, row):
+    index = self.app.presenter.createIndex(row, 0)
+    self.app.presenter._updateItem(ViewData(self.app.presenter._getCache()[row].itemPK,
                                             status=ViewStatuses.Done,
                                             dateTime=datetime.now(),
                                             elapsedTime=15*60))
     self.app.presenter.dataChanged.emit(index, index, [Qt.ItemDataRole.CheckStateRole])
-    print('finished entry', intID)
+    print('finished entry', row)
 
 # ///////////////////////////////////////////////////// New Presenter Features //////////////////////////////////////////////////// #
 
