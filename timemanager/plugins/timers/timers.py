@@ -1,6 +1,9 @@
 from typing import Any
 from datetime import datetime
+
 from PySide6.QtCore import QModelIndex, QPersistentModelIndex, Qt, QTimer, Signal, Slot
+from PySide6.QtWidgets import QMessageBox
+
 from timemanager.plugins.plugin import plugin
 from timemanager.plugins.pluginHandler import modify_func
 from timemanager.plugins.timers.timers_handler import TimersHandler
@@ -43,12 +46,16 @@ class timers(plugin):
     print('started entry', row)
 
   def finishTheTimer(self, row):
-    index = self.app.presenter.createIndex(row, 0)
-    self.app.presenter._updateItem(ViewData(self.app.presenter._getCache()[row].itemPK,
-                                            status=ViewStatuses.Done,
-                                            dateTime=datetime.now(),
-                                            elapsedTime=15*60))
-    self.app.presenter.dataChanged.emit(index, index, [Qt.ItemDataRole.CheckStateRole])
+    # index = self.app.presenter.createIndex(row, 0)
+    # self.app.presenter._updateItem(ViewData(self.app.presenter._getCache()[row].itemPK,
+    #                                         status=ViewStatuses.Done,
+    #                                         dateTime=datetime.now(),
+    #                                         elapsedTime=15*60))
+    # self.app.presenter.dataChanged.emit(index, index, [Qt.ItemDataRole.CheckStateRole])
+    deed = self.app.presenter._getCache()[row].itemName
+    msg = QMessageBox()
+    msg.setText(f'Закончен пункт {deed}')
+    msg.exec()
     print('finished entry', row)
 
 # ///////////////////////////////////////////////////// New Presenter Features //////////////////////////////////////////////////// #
