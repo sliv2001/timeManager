@@ -29,8 +29,8 @@ class timers(plugin):
   def dataChanged(self, begin: QModelIndex, end: QModelIndex, roles: list[int]):
     if Qt.ItemDataRole.CheckStateRole in roles:
       for row in range(begin.row(), end.row()+1): # Because if (1, 1), we need to process it
-        done = self.app.presenter._getCache()[row].status == ViewStatuses.Done
-        if not done:
+        madeProgress = self.app.presenter._getCache()[row].status == ViewStatuses.Pending
+        if not madeProgress:
           continue
         timeout = 900
         self.startTheTimer(row, timeout)
@@ -46,12 +46,12 @@ class timers(plugin):
     print('started entry', row)
 
   def finishTheTimer(self, row):
-    # index = self.app.presenter.createIndex(row, 0)
-    # self.app.presenter._updateItem(ViewData(self.app.presenter._getCache()[row].itemPK,
-    #                                         status=ViewStatuses.Done,
-    #                                         dateTime=datetime.now(),
-    #                                         elapsedTime=15*60))
-    # self.app.presenter.dataChanged.emit(index, index, [Qt.ItemDataRole.CheckStateRole])
+    index = self.app.presenter.createIndex(row, 0)
+    self.app.presenter.UpdateItem(ViewData(self.app.presenter._getCache()[row].itemPK,
+                                            status=ViewStatuses.Done,
+                                            dateTime=datetime.now(),
+                                            elapsedTime=15*60))
+    self.app.presenter.dataChanged.emit(index, index, [Qt.ItemDataRole.CheckStateRole])
     deed = self.app.presenter._getCache()[row].itemName
     msg = QMessageBox()
     msg.setText(f'Закончен пункт {deed}')
@@ -60,12 +60,16 @@ class timers(plugin):
 
 # ///////////////////////////////////////////////////// New Presenter Features //////////////////////////////////////////////////// #
 
-  # @modify_func('setData')
-  # def setData(self, index: QModelIndex | QPersistentModelIndex, value: Any, role: int = ...):
-  #   if role == Qt.ItemDataRole.CheckStateRole and value == Qt.CheckState.Checked.value:
-  #     self.dataChanged.emit(index, index, [role])
-  #     return False
-  #   return None
+  @modify_func('setData')
+  def setData(self, index: QModelIndex | QPersistentModelIndex, value: Any, role: int = ...):
+    if role == Qt.ItemDataRole.CheckStateRole and value == Qt.CheckState.Checked.value:
+      self.app.presenter.UpdateItem(ViewData(index.internalId(),
+                                             status=ViewStatuses.Pending,
+                                             dateTime=datetime.now(),
+                                             elapsedTime=0), index.row())
+      self.dataChanged.emit(index, index, [role])
+      return False
+    return None
 
   # @modify_func('data')
   # def data(self, index: QModelIndex | QPersistentModelIndex, role: int = ...):

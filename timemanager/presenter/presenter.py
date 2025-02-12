@@ -114,7 +114,8 @@ class Presenter(QAbstractItemModel):
     if item.status == ViewStatuses.Done or item.status == ViewStatuses.Undone:
       self._setItemDone(item.itemPK, item.status, item.elapsedTime, item.dateTime)
     elif item.status == ViewStatuses.Pending:
-      raise RuntimeError('Currently Pending is not supported')
+      fulfillLine = ModelFulfillments.Pending
+      self._addFulfill(item.itemPK, fulfillLine, item.elapsedTime, item.dateTime)
     else:
       statusName = ViewStatuses.toModel(item.status)
       if statusName == ModelStatuses.Removed:
