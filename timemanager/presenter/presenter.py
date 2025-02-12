@@ -213,6 +213,9 @@ class Presenter(QAbstractItemModel):
         return Qt.CheckState.Checked
       else:
         return Qt.CheckState.Unchecked
+    elif role == Qt.ItemDataRole.BackgroundRole:
+      if self._getCache()[index.row()].status == ViewStatuses.Outdated:
+        return QColor("Red")
     else:
       return None
 
