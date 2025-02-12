@@ -2,3 +2,4 @@
 *.sqlite
 launch.json
 .DS_Store
+.svg.bkp
