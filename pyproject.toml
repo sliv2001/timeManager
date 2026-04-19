@@ -1,3 +1,6 @@
+[project]
+name = "timemanager"
+
 [tool.poetry]
 name = "timemanager"
 version = "0.0.0"
@@ -7,10 +10,12 @@ license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">=3.11,<3.13"
+python = ">=3.11,<3.12"
 pyside6 = "^6.7.2"
 pony = "^0.7.17"
 
+[project.scripts]
+time_manager = "timemanager.cli.main:main"
 
 [build-system]
 requires = ["poetry-core"]
